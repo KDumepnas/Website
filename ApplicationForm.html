@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Step Application Form</title>
+  <link rel="stylesheet" href="ApplicationForm.css">
+  
+</head>
+<body>
+<div class="overlay"></div>
+  <div class="form-container">
+
+    <!-- Step 1: Personal Information -->
+    <div id="step1" class="step-form">
+        <h2>Step 1: Personal Information</h2>
+        <div class="form-group">
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" name="fullname" required placeholder="e.g., Juan Dela Cruz">
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" name="dob" required>
+          <span class="error-message"></span>
+        </div>
+         <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender" required>
+              <option value="">-- Select Gender --</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+          </select>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="nationality">Nationality</label>
+          <input type="text" id="nationality" name="nationality" required placeholder="e.g., Filipino">
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" name="address" required placeholder="e.g., 123 Rizal St, Baguio City">
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="contact">Contact Number</label>
+          <input type="tel" id="contact" name="contact" required placeholder="e.g., 09171234567" pattern="[0-9\+\-\s]{10,15}">
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="e.g., juan.delacruz@email.com">
+          <span class="error-message"></span>
+        </div>
+        <br>
+        <button type="button" onclick="window.location.href='Selection_Page.html'" class="btn">Back</button> 
+        <button type="button" class="btn" onclick="showStep(2)">Next</button>
+    
+    </div>
+
+     <!-- Step 2: Family & Emergency Contact -->
+     <div id="step2" class="step-form hidden">
+        <h2>Step 2: Family & Emergency Contact</h2>
+         <div class="form-group">
+          <label for="father-name">Father’s Name</label>
+          <input type="text" id="father-name" name="father_name" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="father-work">Father’s Work</label>
+          <input type="text" id="father-work" name="father_work" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="mother-name">Mother’s Name</label>
+          <input type="text" id="mother-name" name="mother_name" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="mother-work">Mother’s Work</label>
+          <input type="text" id="mother-work" name="mother_work" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="emergency">Emergency Contact Person</label>
+          <input type="text" id="emergency" name="emergency_person" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="emergency-contact">Emergency Contact Number</label>
+          <input type="tel" id="emergency-contact" name="emergency_contact" required pattern="[0-9\+\-\s]{10,15}">
+          <span class="error-message"></span>
+        </div>
+        <div class="button-group">
+          <button type="button" class="btn btn-back" onclick="showStep(1)">Back</button>
+          <!-- FIXED: Changed validateAndShowStep to showStep -->
+          <button type="button" class="btn btn-next" onclick="showStep(3)">Next</button>
+        </div>
+    </div>
+
+    <!-- Step 3: Medical & Health Information -->
+    <div id="step3" class="step-form hidden">
+        <h2>Step 3: Medical & Health Information</h2>
+        <div class="form-group">
+          <label for="blood">Blood Type</label>
+          <input type="text" id="blood" name="blood_type" required placeholder="e.g., O+">
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="medication">Current Medications (if any, type 'None' if none)</label>
+          <input type="text" id="medication" name="medication" required placeholder="e.g., None">
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="allergies">Allergies (if any, type 'None' if none)</label>
+          <input type="text" id="allergies" name="allergies" required placeholder="e.g., Penicillin, None">
+          <span class="error-message"></span>
+        </div>
+        <button type="button" class="btn" onclick="showStep(2)">Back</button>
+        <button type="button" class="btn" onclick="showStep(4)">Next</button>
+    </div>
+
+    <!-- Step 4: Academic Background -->
+    <div id="step4" class="step-form hidden">
+        <h2>Step 4: Academic Background</h2>
+         <div class="form-group">
+          <label for="college">Last School Attended</label>
+          <input type="text" id="college" name="last_school" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="year">Year of Graduation/Last Attendance</label>
+          <input type="number" id="year" name="grad_year" required placeholder="e.g., 2023" min="1950" max="2099">
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="course">Course/Program to Enroll In</label>
+          <input type="text" id="course" name="course" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="id">Student ID (if available)</label>
+          <input type="text" id="id" name="student_id"> 
+           <span class="error-message"></span>
+        </div>
+        <div class="button-group">
+          <button type="button" class="btn btn-back" onclick="showStep(3)">Back</button>
+          <button type="button" class="btn btn-next" onclick="showStep(5)">Next</button>
+        </div>
+    </div>
+
+    <!-- Step 5: Accommodation Preferences -->
+    <div id="step5" class="step-form hidden">
+        <h2>Step 5: Accommodation Preferences</h2>
+        <div class="form-group">
+          <label for="room-preference">Room Type Preference (e.g., Single, Double)</label>
+          <input type="text" id="room-preference" name="room_preference" required>
+          <span class="error-message"></span>
+        </div>
+         <div class="form-group">
+          <label for="meal-plan">Meal Plan Preference (e.g., Yes, No, Specific)</label>
+          <input type="text" id="meal-plan" name="meal_plan" required>
+          <span class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="special-requests">Special Requests (Optional)</label>
+          <textarea id="special-requests" name="special_requests" rows="3"></textarea>
+          <span class="error-message"></span>
+        </div>
+        <button type="button" class="btn" onclick="showStep(4)">Back</button>
+        <button type="button" class="btn" onclick="showStep(6)">Next</button>
+    </div>
+
+    <!-- Step 6: Document Submission -->
+    <form id="step6" class="step-form hidden" action="StudentDashboard.html" method="get">
+        <h2>Step 6: Document Submission</h2>
+        <div class="form-group"> 
+            <label for="enrollment">Proof of Enrollment</label>
+            <input type="file" id="enrollment" name="enrollment_proof" required> 
+             <span class="error-message"></span> 
+        </div>
+        <div class="form-group"> 
+            <label for="birth-certificate">Birth Certificate</label>
+            <input type="file" id="birth-certificate" name="birth_cert" required> 
+             <span class="error-message"></span> 
+        </div>
+        <div class="button-group"> 
+            <button type="button" class="btn" onclick="showStep(5)">Back</button>
+            <button type="submit" class="btn">Submit</button>
+        </div>
+    </form>
+  </div>
+
+  <script>
+    function showStep(step) {
+        let currentStep = document.querySelector('.step-form:not(.hidden)');
+        // Added check if currentStep exists before proceeding
+        if (!currentStep) {
+            console.error("Could not find the current step.");
+            return; // Exit if current step isn't found
+        }
+
+        let inputs = currentStep.querySelectorAll('input[required], select[required]');
+
+
+        for (let input of inputs) {
+             if (!input.value || (input.type !== 'file' && input.value.trim() === "")) {
+                alert("Please fill out all required fields before proceeding.");
+                try { input.focus(); } catch(e) {}
+                return; // Stop processing
+            }
+        }
+
+        // Hide all steps
+        document.querySelectorAll('.step-form').forEach(form => form.classList.add('hidden'));
+
+        // Show the target step
+        let nextStepElement = document.getElementById('step' + step);
+        if (nextStepElement) {
+             nextStepElement.classList.remove('hidden');
+        } else {
+            console.error("Target step element not found: #step" + step);
+             // Optional: Fallback to step 1 if target doesn't exist
+             let firstStep = document.getElementById('step1');
+             if (firstStep) firstStep.classList.remove('hidden');
+        }
+    }
+
+    // Ensure only Step 1 is visible when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.step-form').forEach((formDiv) => {
+            if (formDiv.id !== 'step1') {
+                formDiv.classList.add('hidden');
+            } else {
+                 formDiv.classList.remove('hidden');
+            }
+        });
+         // Safety check
+         if (!document.querySelector('.step-form:not(.hidden)')) {
+             let firstStep = document.getElementById('step1');
+             if(firstStep) firstStep.classList.remove('hidden');
+         }
+    });
+  </script>
+</body>
+</html>

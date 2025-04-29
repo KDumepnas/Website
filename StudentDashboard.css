@@ -1,0 +1,597 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #d2e5c9;
+    height: 100vh;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+  
+  }
+  
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("BSULogo.png");
+    background-size: 55%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.3;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  .settings-icon:hover {
+    background-color: #006400;
+    transform: rotate(90deg);
+  }
+  
+  .settings-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+  
+  .settings-icon {
+    background-color: #098F00;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .settings-icon:hover {
+    background-color: #006400;
+    transform: rotate(90deg);
+  }
+  
+  .settings-dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    width: 220px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .settings-dropdown {
+    display: none;
+  }
+  
+  .settings-container.active .settings-dropdown {
+    display: block;
+  }
+  
+  .settings-dropdown label,
+  .settings-dropdown select,
+  .settings-dropdown button {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .toggle-switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 89px;
+    width: 100%;
+  }
+  
+  .toggle-switch span {
+    white-space: nowrap;
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 16px;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    border-radius: 48px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: 0.4s;
+    width: 36px;
+  }
+  
+  .slider:before {
+    content: "";
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #098F00;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(21px);
+  }
+  
+  .language-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  #language-dropdown {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .container {
+    display: flex;
+    height: 100%;
+    position: relative;
+    border-top: 10px solid #098F00;
+  }
+  
+  .sidebar {
+    background-color: rgba(9, 143, 0, 0.7);
+    width: 60px;
+    max-height: 100%;
+    padding: 10px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    transition: width 0.3s ease;
+  }
+  
+  .sidebar:hover {
+    width: 250px;
+  }
+  
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: yellow;
+    padding: 10px 0;
+    font-size: 18px;
+    margin-bottom: 15px;
+    margin-left: 40px;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100%;
+  }
+  
+  .sidebar a i {
+    color: yellow;
+    margin-right: 10px;
+    font-size: 24px;
+  }
+  
+  .sidebar a span {
+    display: inline;
+  }
+  
+  .sidebar a:hover {
+    background-color: rgba(33, 136, 56, 0.7);
+    color: white;
+  }
+  
+  .sidebar a:hover i {
+    color: white;
+  }
+  
+  .sidebar a:hover span {
+    font-weight: bold;
+  }
+  
+  .sidebar:hover a span {
+    display: inline;
+  }
+  
+  .sidebar:not(:hover) a span {
+    display: none;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+    position: relative;
+  }
+  
+  .profile-info {
+    display: none;
+    padding: 20px;
+    color: #333;
+    font-size: 18px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-info h1 {
+    margin-bottom: 10px;
+  }
+  
+  #profile:target,
+  #room:target,
+  #calendar:target,
+  #notifications:target,
+  #contact:target {
+    display: block;
+  }
+  
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    background-color: #ccc;
+    background-image: url("profilepic.jpg");
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 20px;
+    border: 5px solid green;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  .profile-image .camera-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 18px;
+    color: white;
+  }
+  
+  .profile-image .camera-icon:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .room-image {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .room-image img {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+  }
+  
+  table {
+    border: solid rgb(0, 131, 37);
+    width: 100%;
+    align-content: center;
+    border-collapse: collapse;
+  }
+  
+  th,
+  td {
+    border: 1px solid rgb(42, 179, 1);
+    padding: 5px;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #aad57a;
+  }
+  
+  .breakfast,
+  .lunch,
+  .dinner,
+  .clean,
+  .water,
+  .sweep,
+  .collect,
+  .curfew,
+  .lights-off {
+    background-color: #00f8fc;
+  }
+  
+  .breakfast,
+  .lunch,
+  .dinner,
+  .lights-off {
+    letter-spacing: 20px;
+  }
+  
+  .footer-note {
+    font-size: 12px;
+    color: #333;
+  }
+  
+  .offense,
+  .first-offense,
+  .second-offense,
+  .third-offense {
+    color: red;
+    font-weight: bold;
+  }
+  
+  button:hover {
+    background-color: #006400;
+    transform: scale(1.1);
+  }
+  
+  form {
+    margin: 20px 0;
+  }
+  
+  details {
+    width: 100%;
+    background-color: #f0f9ec;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  summary {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #aad57a;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #003300;
+  }
+  
+  select {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #0b6d00;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: none;
+  }
+  
+  button[type="submit"] {
+    padding: 8px 16px;
+    background-color: #098f00;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #006400;
+  }
+  
+  button {
+    padding: 8px 16px;
+    background-color: #098f00;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  button:active {
+    transform: scale(0.95);
+  }
+  
+  button[disabled] {
+    pointer-events: none;
+  }
+  
+  .dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+  
+  .dark-mode .sidebar {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .dark-mode .sidebar a {
+    color: #f1f1f1;
+  }
+  
+  .dark-mode .sidebar a:hover {
+    background-color: rgba(70, 70, 70, 0.7);
+    color: #fff;
+  }
+  
+  .dark-mode .settings-dropdown {
+    background-color: #1f1f1f;
+    color: white;
+    border: 1px solid #333;
+  }
+  
+  .dark-mode .profile-info,
+  .dark-mode details,
+  .dark-mode summary {
+    background-color: rgba(70, 70, 70, 0.3);
+    color: white !important;
+    border-color: #444;
+  }
+  
+  .dark-mode table {
+    border-color: #555;
+  }
+  
+  .dark-mode th,
+  .dark-mode td {
+    border-color: #666;
+    background-color: #1a1a1a;
+    color: #f5f5f5;
+  }
+  
+  .dark-mode select,
+  .dark-mode textarea,
+  .dark-mode input[type="time"] {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+  }
+  
+  .dark-mode button {
+    background-color: #333 !important;
+    color: white !important;
+  }
+  
+  .dark-mode button:hover {
+    background-color: #444 !important;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .sidebar {
+      flex-direction: row;
+      width: 100%;
+      height: auto;
+      overflow-x: auto;
+    }
+  
+    .sidebar a {
+      margin: 0 10px;
+      justify-content: center;
+    }
+  
+    .sidebar a span {
+      display: none !important;
+    }
+  
+    .content {
+      padding: 10px;
+    }
+  }
+
+
+.form-notification {
+  margin-top: 15px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 4px;
+  display: none; 
+  border: 1px solid transparent;
+}
+
+.form-notification.success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+.form-notification.error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+body.dark-mode .form-notification.success {
+  background-color: #2e4b37;
+  border-color: #4a7c59;
+  color: #a5d6a7;
+}
+
+body.dark-mode .form-notification.error {
+  background-color: #5a3a3a;
+  border-color: #7a4a4a;
+  color: #f7aaaa;
+}
+
+
+#contact form button[type="submit"],
+#contact #deactivate-account-btn {
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#contact form button[type="submit"] {
+   background-color: #098F00;
+   color: white;
+}
+#contact form button[type="submit"]:hover {
+   background-color: #076d00;
+}
+#contact #deactivate-account-btn {
+   background-color: #d9534f; 
+   color: white;
+   margin-top: 10px; 
+}
+#contact #deactivate-account-btn:hover {
+   background-color: #c9302c; /
+}
+
+
+#maintenanceForm div { 
+  position: relative; 
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0; 
+  width: 100%; 
+  max-width: 500px; 
+  height: 150px; 
+}
+body.dark-mode #maintenanceForm div {
+  border-color: #555;
+}
+#maintenanceForm textarea {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: none;
+  resize: none;
+  background-color: transparent;
+}
+#maintenanceForm button[type="submit"] {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 5px 10px; 
+  background-color: #337ab7; 
+  color: white;
+}
+#maintenanceForm button[type="submit"]:hover {
+   background-color: #286090;
+}

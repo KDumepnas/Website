@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="StudentDashboard.css">
+</head>
+
+
+<body class="main">
+    <div class="settings-container">
+      <div class="settings-icon">
+        <i class="fas fa-cog"></i>
+      </div>
+      <div class="settings-dropdown">
+        <div class="toggle-switch">
+          <span id="modeIcon"><i class="fas fa-moon"></i> Dark Mode</span>
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="language-selector">
+          <i class="fas fa-globe"></i>
+          <span>Language</span>
+          <select id="language-dropdown">
+            <option value="en">English</option>
+            <option value="fil">Filipino</option>
+          </select>
+        </div>
+        <button onclick="logout()">🚪 Log Out</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="sidebar">
+        <a href="#profile"><i class="fas fa-user"></i><span>Profile</span></a>
+        <a href="#room"><i class="fas fa-door-open"></i><span>Room</span></a>
+        <a href="#calendar"><i class="fas fa-calendar-alt"></i><span>Task Calendar</span></a>
+        <a href="#notifications"><i class="fas fa-bell"></i><span>Notifications</span></a>
+        <a href="#contact"><i class="fas fa-id-badge"></i><span>Admin Contact</span></a>
+      </div>
+
+      <div class="content">
+        <!-- Profile Section -->
+        <div id="profile" class="profile-info">
+          <div class="profile-image">
+             <i class="fas fa-user"></i> <!-- Default user icon -->
+            <i class="fas fa-camera camera-icon" title="Change Profile Picture (Not implemented)"></i>
+          </div>
+          <h1>Jhonnie A. Makasalanan</h1>
+          <p><strong>Email:</strong> Junjun001@gmail.com</p>
+          <p><strong>Contact No.:</strong> 09022053869</p>
+          <p><strong>Program:</strong> Bachelor of Science in Information Technology</p>
+          <p><strong>Student ID No.:</strong> 2405432</p>
+          <p><strong>Registration Status:</strong> Currently Enrolled</p>
+          <p><strong>S.Y.:</strong> 2024–2025</p>
+          <hr>
+          <h1>Personal Details</h1>
+          <p><strong>Gender:</strong> Male</p>
+          <p><strong>Age:</strong> 19</p>
+          <p><strong>Birth Date:</strong> January 1, 2005</p>
+          <p><strong>Address:</strong> No.1 Purok 1, Barangay Dimakita, San Banda St. Biringan City</p>
+          <p><strong>Religion:</strong> Roman Catholic</p>
+          <hr>
+          <h1>Contact Person</h1>
+          <p><strong>Guardian:</strong> Jhenie A. Makasalanan</p>
+          <p><strong>Relationship:</strong> Mother</p>
+          <p><strong>Contact No.:</strong> 093900909090</p>
+          <p><strong>Address:</strong> No.1 Purok 1, Barangay Dimakita, San Banda St. Biringan City</p>
+        </div>
+
+        <!-- Room Section -->
+        <div id="room" class="profile-info">
+           <div class="profile-image">
+             <i class="fas fa-door-open"></i>
+             <i class="fas fa-camera camera-icon" title="Change Room Picture (Not implemented)"></i>
+           </div>
+           <h1>Room 101</h1>
+           <p><strong>Dimensions:</strong> 15 feet 6 inches × 10 feet 8 inches</p>
+           <p><strong>Area:</strong> 165.4 ft² (15.37 m²)</p>
+           <div class="room-image">
+             <img src="roomlayout.jpg" alt="Room Layout"> <!-- Ensure roomlayout.jpg exists -->
+           </div>
+        </div>
+
+        <!-- Calendar Section -->
+        <div id="calendar" class="profile-info">
+           <div class="profile-image">
+             <i class="fas fa-calendar-alt"></i>
+              <i class="fas fa-camera camera-icon" title="Change Picture (Not implemented)"></i>
+           </div>
+           <h1>Jhonnie A. Makasalanan</h1>
+           <hr>
+           <h1>Task Schedule</h1>
+           <p class="offense">Offenses and consequences:</p>
+           <p>
+             <strong class="first-offense">First Offense:</strong> General cleaning and promissory note<br>
+             <strong class="second-offense">Second Offense:</strong> Promissory note with parent attendance<br>
+             <strong class="third-offense">Third Offense:</strong> OSS referral and record on Good Moral
+           </p>
+           <p class="footer-note">Note: Complete tasks on time or report 1 hour early with valid reason.</p>
+           <table>
+             <thead>
+               <tr>
+                 <th>Time</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr><td>6am–7am</td><td></td><td></td><td class="water">Water Plants</td><td></td><td class="clean">Clean 1F Hall</td><td class="water">Water Plants</td><td></td></tr>
+               <tr><td>7am–8am</td><td colspan="7" class="breakfast">Breakfast</td></tr>
+               <tr><td>8am–9am</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+               <tr><td>9am–10am</td><td></td><td></td><td></td><td class="clean">Clean 2F Hall</td><td></td><td></td><td class="clean">Clean CR</td></tr>
+               <tr><td>10am–11am</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+               <tr><td>11am–12pm</td><td colspan="7" class="lunch">Lunch</td></tr>
+               <tr><td>12pm–1pm</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+               <tr><td>1pm–2pm</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+               <tr><td>2pm–3pm</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="clean">Clean 1F Hall</td></tr>
+               <tr><td>3pm–4pm</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+               <tr><td>4pm–5pm</td><td></td><td class="sweep">Sweep Front</td><td></td><td></td><td class="sweep">Sweep Back</td><td></td><td></td></tr>
+               <tr><td>5pm–6pm</td><td class="clean">Clean Kitchen</td><td></td><td></td><td></td><td></td><td class="clean">Clean Kitchen</td><td></td></tr>
+               <tr><td>6pm–7pm</td><td></td><td></td><td class="collect">Collect Trash</td><td></td><td></td><td></td><td></td></tr>
+               <tr><td>7pm–8pm</td><td colspan="7" class="curfew">Curfew</td></tr>
+               <tr><td>8pm–9pm</td><td colspan="7" class="dinner">Dinner</td></tr>
+               <tr><td>9pm–5am</td><td colspan="7" class="lights-off">Lights Off</td></tr>
+             </tbody>
+           </table>
+         </div>
+
+        <!-- Notifications Section -->
+        <div id="notifications" class="profile-info">
+           <div class="profile-image">
+             <i class="fas fa-bell"></i>
+              <i class="fas fa-camera camera-icon" title="Change Picture (Not implemented)"></i>
+           </div>
+           <h1>Jhonnie A. Makasalanan</h1>
+           <hr>
+           <h1>Notifications</h1>
+           <p>No new notifications.</p>
+        </div>
+
+        <!-- Contact Section -->
+        <div id="contact" class="profile-info">
+           <div class="profile-image">
+              <i class="fas fa-id-badge"></i>
+              <i class="fas fa-camera camera-icon" title="Change Picture (Not implemented)"></i>
+           </div>
+           <h1>Jhonnie A. Makasalanan</h1>
+           <hr>
+           <h1>Admin Contact</h1>
+
+           <label><b>Change Task Schedule</b></label>
+            <form id="taskChangeForm">
+              <details>
+                <summary>⏰ Select Task Details</summary>
+                <div>
+                  <label for="assigned-day">Assigned Day:</label>
+                  <select id="assigned-day" name="assigned-day" required>
+                    <option value="">--Select--</option>
+                    <option value="M">Monday</option>
+                    <option value="T">Tuesday</option>
+                    <option value="W">Wednesday</option>
+                    <option value="Th">Thursday</option>
+                    <option value="F">Friday</option>
+                    <option value="Sa">Saturday</option>
+                    <option value="Su">Sunday</option>
+                  </select>
+                  <label for="change-day">Change To:</label>
+                  <select id="change-day" name="change-day" required>
+                     <option value="">--Select--</option>
+                    <option value="M">Monday</option>
+                    <option value="T">Tuesday</option>
+                    <option value="W">Wednesday</option>
+                    <option value="Th">Thursday</option>
+                    <option value="F">Friday</option>
+                    <option value="Sa">Saturday</option>
+                    <option value="Su">Sunday</option>
+                  </select>
+                  <label for="task-time">Time of Task:</label>
+                  <input type="time" id="task-time" name="task-time" required>
+                  <label for="task-name">Task:</label>
+                  <select id="task-name" name="task-name" required>
+                    <option value="" disabled selected>-- Select Task --</option>
+                    <option value="comfort-1f">Clean comfort room 1F</option>
+                    <option value="comfort-2f">Clean comfort room 2F</option>
+                    <option value="dirty-kitchen">Clean dirty kitchen</option>
+                    <option value="corridor-1f">Clean corridor 1F</option>
+                    <option value="corridor-2f">Clean corridor 2F</option>
+                    <option value="hallway-1f">Clean hallway 1F</option>
+                    <option value="hallway-2f">Clean hallway 2F</option>
+                    <option value="backyard">Clean backyard</option>
+                    <option value="frontyard">Clean front yard</option>
+                    <option value="canal">Clean canal</option>
+                    <option value="surrounding-1">Clean the surrounding 1</option>
+                    <option value="surrounding-2">Clean the surrounding 2</option>
+                  </select>
+                  <label for="task-reason">Reason:</label>
+                  <textarea id="task-reason" name="reason" rows="3" placeholder="Explain your reason for changing task..." maxlength="300" required></textarea>
+                  <button type="submit">✅ Submit</button>
+                </div>
+              </details>
+            </form>
+            <div id="task-notification" class="form-notification"></div>
+
+            <label><b>Change Room</b></label>
+            <form id="roomForm">
+              <details>
+                <summary>📋 Select Room</summary>
+                <div>
+                  <label for="room-select">Choose a room:</label>
+                  <select id="room-select" name="room" required>
+                    <option value="" disabled selected>-- Select Room --</option>
+                    <option value="101">Room 101 (4/4) - 🟡 Current Room</option>
+                    <option value="102" disabled>Room 102 (4/4) - 🔴 Full</option>
+                    <option value="103" disabled>Room 103 (4/4) - 🔴 Full</option>
+                    <option value="104">Room 104 (2/4) - 🟢 Available</option>
+                    <option value="105">Room 105 (3/4) - 🟢 Available</option>
+                    <option value="106" disabled>Room 106 (4/4) - 🔴 Full</option>
+                    <option value="107">Room 107 (2/4) - 🟢 Available</option>
+                    <option value="108" disabled>Room 108 (4/4) - 🔴 Full</option>
+                    <option value="109">Room 109 (2/4) - 🟢 Available</option>
+                    <option value="110" disabled>Room 110 (4/4) - 🔴 Full</option>
+                    <option value="201" disabled>Room 201 (4/4) - 🔴 Full</option>
+                    <option value="202" disabled>Room 202 (4/4) - 🔴 Full</option>
+                    <option value="203" disabled>Room 203 (4/4) - 🔴 Full</option>
+                    <option value="204" disabled>Room 204 (4/4) - 🔴 Full</option>
+                    <option value="205">Room 205 (2/4) - 🟢 Available</option>
+                    <option value="206">Room 206 (3/4) - 🟢 Available</option>
+                    <option value="207" disabled>Room 207 (4/4) - 🔴 Full</option>
+                    <option value="208" disabled>Room 208 (4/4) - 🔴 Full</option>
+                    <option value="209" disabled>Room 209 (4/4) - 🔴 Full</option>
+                    <option value="210">Room 210 (2/4) - 🟢 Available</option>
+                  </select>
+                  <label for="room-reason">Reason:</label>
+                  <textarea id="room-reason" name="reason" rows="3" placeholder="Explain your reason for changing room..." maxlength="300" required></textarea>
+                  <button type="submit">✅ Submit</button>
+                </div>
+              </details>
+            </form>
+            <div id="room-notification" class="form-notification"></div>
+
+          <hr>
+          <form id="maintenanceForm">
+            <label for="maintenance-message">Add Message Concern:</label>
+            <div class="maintenance-wrapper">
+              <textarea id="maintenance-message" name="maintenance-message" rows="5" placeholder="Type your maintenance concern here..." maxlength="300" required></textarea>
+              <button type="submit">📤 Send</button>
+            </div>
+          </form>
+          <div id="maintenance-notification" class="form-notification"></div>
+
+          <hr>
+
+          <label><b>Account Deactivation</b></label>
+          <button id="deactivate-account-btn">⚠ Deactivate Account</button>
+
+        </div> 
+      </div> 
+    </div> 
+
+    <script>
+  
+      const settingsContainer = document.querySelector('.settings-container');
+      const settingsIcon = document.querySelector('.settings-icon');
+
+      if (settingsIcon && settingsContainer) {
+        settingsIcon.addEventListener('click', function (event) {
+           event.stopPropagation();
+          settingsContainer.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!settingsContainer.contains(event.target) && settingsContainer.classList.contains('active')) {
+                settingsContainer.classList.remove('active');
+            }
+        });
+      }
+
+   
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      const body = document.body;
+      const modeIcon = document.getElementById('modeIcon');
+
+      function setTheme(isDark) {
+        body.classList.toggle('dark-mode', isDark);
+        if(modeIcon){
+            if (isDark) {
+                modeIcon.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                modeIcon.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+      }
+
+      const savedTheme = localStorage.getItem('theme');
+      if (darkModeToggle) { // Check if toggle exists
+          if (savedTheme === 'dark') {
+            darkModeToggle.checked = true;
+            setTheme(true);
+          } else {
+            darkModeToggle.checked = false;
+            setTheme(false);
+          }
+
+          darkModeToggle.addEventListener('change', function () {
+            setTheme(this.checked);
+          });
+      } else {
+        
+          setTheme(savedTheme === 'dark');
+      }
+
+
+      // --- LOGOUT FUNCTION ---
+      function logout() {
+        if (confirm("Are you sure you want to log out?")) {
+          console.log("Logging out...");
+          window.location.href = 'LOGIN.html'; 
+        }
+      }
+
+
+
+
+      function handleFormSubmit(formId, notificationId, successMessage, failureMessage) {
+          const form = document.getElementById(formId);
+          const notificationElement = document.getElementById(notificationId);
+
+          if (form && notificationElement) {
+              form.addEventListener('submit', function(e) {
+                  e.preventDefault();
+                  let allFilled = true;
+                  const requiredFields = form.querySelectorAll('[required]');
+                  requiredFields.forEach(input => { input.style.border = ''; });
+
+                  requiredFields.forEach(input => {
+                       if (!input.value.trim()) {
+                          allFilled = false;
+                          input.style.border = '1px solid red';
+                      }
+                  });
+
+                  if (allFilled) {
+                      notificationElement.textContent = successMessage;
+                      notificationElement.className = 'form-notification success';
+                      form.reset();
+                  } else {
+                      notificationElement.textContent = failureMessage;
+                      notificationElement.className = 'form-notification error';
+                  }
+                  notificationElement.style.display = 'block';
+                  setTimeout(() => {
+                      notificationElement.style.display = 'none';
+                      if (!allFilled) {
+                           requiredFields.forEach(input => { input.style.border = ''; });
+                      }
+                  }, 5000);
+              });
+          } else {
+              console.error("Form or Notification element not found for:", formId);
+          }
+      }
+
+      handleFormSubmit('taskChangeForm', 'task-notification', '✅ Task change request submitted successfully!', '⚠️ Please fill in all required task change fields.');
+      handleFormSubmit('roomForm', 'room-notification', '✅ Room change request submitted successfully!', '⚠️ Please fill in all required room change fields.');
+      handleFormSubmit('maintenanceForm', 'maintenance-notification', '✅ Your maintenance concern has been submitted.', '⚠️ Please enter a concern before submitting.');
+
+
+      const deactivateBtn = document.getElementById("deactivate-account-btn");
+      if (deactivateBtn) {
+          deactivateBtn.addEventListener("click", function () {
+                const reason = prompt("Please state your reason for requesting account deactivation:");
+                if (reason && reason.trim() !== "") {
+                  const confirmRequest = confirm("Are you sure you want to proceed with the deactivation request?");
+                  if (confirmRequest) {
+                    alert("Your deactivation request has been sent. Please wait for admin confirmation.");
+                    console.log("Deactivation requested. Reason:", reason);
+                  }
+                } else if (reason !== null) {
+                   alert("Request cancelled. A reason is required.");
+                }
+              });
+       }
+
+
+      const sidebarLinks = document.querySelectorAll('.sidebar a');
+      const contentSections = document.querySelectorAll('.content > div[id]');
+
+      function setActiveContent() {
+          const hash = window.location.hash;
+          let activeSectionFound = false;
+
+          contentSections.forEach(section => { section.style.display = 'none'; });
+          sidebarLinks.forEach(link => { link.classList.remove('active'); });
+
+          if (hash) {
+              const targetLink = document.querySelector(`.sidebar a[href="${hash}"]`);
+              try {
+                  const targetSection = document.querySelector(hash);
+                  if (targetLink && targetSection && Array.from(contentSections).includes(targetSection)) {
+                      targetLink.classList.add('active');
+                      targetSection.style.display = 'block';
+                      activeSectionFound = true;
+                  }
+              } catch (e) {
+                  console.warn("Invalid hash selector:", hash, e);
+                  activeSectionFound = false;
+              }
+          }
+
+          if (!activeSectionFound) {
+               console.log("Initial load or invalid hash - showing default background.");
+ 
+           }
+      }
+
+
+      setActiveContent();
+    
+      window.addEventListener('hashchange', setActiveContent);
+
+    </script>
+</body>
+</html>

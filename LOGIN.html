@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSU Dorms Login</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+            font-family: "Poppins", Sans-serif;
+        }
+
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: rgb(205, 236, 178);
+            background-image: url("Logoo.png");
+            background-position: center;
+            background-size: 650px;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            color: #162938;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: green;
+            color: #fff;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 300;
+            z-index: 100;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+
+        .wrapper {
+            position: relative;
+            width: 400px;
+            min-height: 500px;
+            background:transparent;
+            border:2px solid rgba(255,255,255,.2);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px rgba(0,0,0,.5);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            transition: min-height .3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .wrapper.active {
+            min-height: 550px;
+        }
+
+        .wrapper .form{
+            width:100%;
+            padding:40px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform .4s ease-in-out, opacity 0.3s ease;
+            backface-visibility: hidden;
+        }
+
+
+        /* Form Switching */
+        .wrapper .form.login { transform: translateX(0); opacity: 1; pointer-events: auto; }
+        .wrapper .form.register { transform: translateX(100%); opacity: 0; pointer-events: none; }
+        .wrapper.active .form.login { transform: translateX(-100%); opacity: 0; pointer-events: none; }
+        .wrapper.active .form.register { transform: translateX(0); opacity: 1; pointer-events: auto; }
+
+        /* Form Content */
+        .form h2 { font-size: 2em; color: #162938; text-align: center; margin-bottom: 20px; transition: color 0.3s ease; }
+        .input-box { position: relative; width:100%; height: 50px; border-bottom: 2px solid #162938; margin: 30px 0; transition: border-bottom-color 0.3s ease; }
+
+        .input-box label {
+            position:absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            font-size: 1em;
+            color: #162938;
+            font-weight: 500;
+            pointer-events: none;
+            transition: top 0.2s ease, font-size 0.2s ease, color 0.3s ease;
+            z-index: 0; /* Keep label on lower layer */
+        }
+        .input-box input:focus~label, .input-box input:valid~label, .input-box select:focus~label, .input-box select:valid~label { top: -5px; font-size: 0.8em; }
+
+        /* --- Combined Input and Select Styling with FIX --- */
+        .input-box input,
+        .input-box select {
+            width: 100%;
+            height:100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1em;
+            color: #162938;
+            font-weight: 600;
+            padding: 0 35px 0 5px;
+            transition: color 0.3s ease;
+            /* --- FIX: Ensure input/select is layered ABOVE the label --- */
+            position: relative; /* Needed for z-index */
+            z-index: 1;         /* Place input/select on a higher layer */
+        }
+
+        /* Specific Select Styling */
+        .input-box select {
+            appearance: none; /* Remove default OS dropdown arrow */
+            cursor: pointer;
+            /* If you want a custom arrow, add it via background-image here or on the .input-box */
+        }
+        .input-box select option { color: #162938; background: #fff; } /* Style dropdown options */
+
+        /* Icon Styling */
+        .input-box .icon{
+            position: absolute;
+            right: 8px;
+            font-size: 1.2em;
+            color: #162938;
+            line-height: 57px; /* Vertically center icon */
+            transition: color 0.3s ease;
+            pointer-events: none; /* Icon doesn't block clicks */
+            z-index: 2; /* Place icon above input if needed, but usually not necessary */
+        }
+
+        /* --- Rest of Form Content Styles --- */
+        .remember-forgot { font-size: .9em; color: #162938; font-weight: 500; margin: -15px 0 15px; display: flex; justify-content: space-between; align-items: center; transition: color 0.3s ease; }
+        .remember-forgot label { display: flex; align-items: center; cursor: pointer; }
+        .remember-forgot label input { accent-color:#162938 ; margin-right: 3px; }
+        .remember-forgot a { color: #162938; text-decoration: none; transition: color 0.3s ease; }
+        .remember-forgot a:hover { text-decoration: underline; color: purple; }
+        .btn { width: 100%; height: 45px; background: #162938; border: none; outline: none; border-radius: 6px; cursor: pointer; font-size: 1em; color: #fff; font-weight: 500; margin-top: 10px; transition: background-color 0.3s ease; }
+        .btn:hover { background: #2c475a; }
+        .login-register { font-size: .9em; color: #162938; text-align: center; font-weight: 500; margin: 25px 0 10px; transition: color 0.3s ease; }
+        .login-register p a { color: #162938; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        .login-register a:hover { text-decoration: underline; color:purple; }
+
+        /* Settings Button Styles */
+        .settings-btn { position: fixed; top: 20px; right: 20px; background-color: rgba(255, 255, 255, 0.7); color: #162938; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; padding: 0; line-height: 1; transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
+        .settings-btn:hover { background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+
+        /* --- Dark Mode Styles --- */
+        body.dark-mode { background-color: #2b3035; color: #ccc; background-image: url("Logoo.png"); background-position: center; background-repeat: no-repeat; background-attachment: fixed; }
+        body.dark-mode header { background: #1e2227; color: #eee; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); }
+        body.dark-mode .wrapper { background: rgba(40, 44, 52, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 30px rgba(0,0,0, .5); }
+        body.dark-mode .form h2 { color: #eee; }
+        body.dark-mode .input-box { border-bottom-color: #aaa; }
+        body.dark-mode .input-box label { color: #aaa; }
+        /* Ensure dark mode input/select text color is visible */
+        body.dark-mode .input-box input,
+        body.dark-mode .input-box select {
+            color: #eee;
+            /* z-index fix applies automatically */
+        }
+        /* Custom dark mode select arrow if needed */
+        /* body.dark-mode .input-box select { background-image: url('...'); } */
+        body.dark-mode .input-box select option { background-color: #3a3f44; color: #eee; }
+        body.dark-mode .input-box .icon { color: #aaa; }
+        body.dark-mode .remember-forgot { color: #aaa; }
+        body.dark-mode .remember-forgot label input { accent-color: #666; }
+        body.dark-mode .remember-forgot a { color: #aaa; }
+        body.dark-mode .remember-forgot a:hover { color: #ccc; }
+        body.dark-mode .btn { background: #4a525a; color: #eee; }
+        body.dark-mode .btn:hover { background: #5a626a; }
+        body.dark-mode .login-register { color: #aaa; }
+        body.dark-mode .login-register p a { color: #ccc; }
+        body.dark-mode .login-register a:hover { color: #eee; }
+        body.dark-mode .settings-btn { background-color: rgba(50, 50, 50, 0.7); color: #ccc; border-color: rgba(255, 255, 255, 0.1); }
+        body.dark-mode .settings-btn:hover { background-color: rgba(60, 60, 60, 0.9); }
+
+        /* --- Modal Styles --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background-color: #fff; padding: 30px 40px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); z-index: 1001; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; display: none; opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; }
+        .modal.visible, .modal-overlay.visible { display: block; opacity: 1; }
+        .modal.visible { transform: translate(-50%, -50%) scale(1); }
+        .modal h2 { margin-top: 0; margin-bottom: 20px; color: #162938; text-align: center; }
+        .modal-body { font-size: 0.95em; line-height: 1.6; color: #333; }
+        .modal-body h3 { margin-top: 20px; margin-bottom: 8px; color: #162938; }
+        .modal-body p, .modal-body ul { margin-bottom: 12px; }
+        .modal-body ul { padding-left: 25px; }
+        .modal-close-btn { position: absolute; top: 10px; right: 15px; font-size: 2em; font-weight: bold; color: #888; background: none; border: none; cursor: pointer; line-height: 1; padding: 0; }
+        .modal-close-btn:hover { color: #333; }
+        .terms-link { color: #1a0dab; text-decoration: underline; cursor: pointer; font-weight: 600; transition: color 0.3s ease; }
+        .terms-link:hover { color: purple; }
+
+        /* Dark Mode Modal Styles */
+        body.dark-mode .modal { background-color: #3a3f44; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4); }
+        body.dark-mode .modal h2 { color: #eee; }
+        body.dark-mode .modal-body { color: #ccc; }
+        body.dark-mode .modal-body h3 { color: #ddd; }
+        body.dark-mode .modal-close-btn { color: #aaa; }
+        body.dark-mode .modal-close-btn:hover { color: #eee; }
+        body.dark-mode .terms-link { color: #9eacff; }
+        body.dark-mode .terms-link:hover { color: #c5ceff; }
+    </style>
+</head>
+
+<body>
+    <header>Hi! Welcome to the BSU dorms online application.</header>
+
+    <!-- Settings Trigger Button -->
+    <button id="settings-trigger" class="settings-btn" title="Toggle Theme">🌓</button>
+
+    <div class="wrapper">
+        <!-- LOGIN FORM -->
+        <div class="form login">
+            <h2>Login</h2>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+                <input type="text" id="username" required>
+                <label>Username</label>
+            </div>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                <input type="password" id="password" required>
+                <label>Password</label>
+            </div>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
+                <select id="role" required>
+                    <option value="" disabled selected>Select Role</option>
+                    <option value="admin">Admin</option>
+                    <option value="student">Student</option>
+                </select>
+               
+               
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox"> Remember me</label>
+                <a href="Try_PasswordChange.html">Forgot password?</a>
+            </div>
+            <button type="button" class="btn" id="login-btn">Login</button>
+            <div class="login-register">
+                <p>Don't have an account? <a href="#" class="register-link">Register</a></p>
+            </div>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div class="form register">
+            <h2>Register</h2>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
+                <input type="email" id="register-email" required>
+                <label>Email</label>
+            </div>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+                <input type="text" id="register-username" required>
+                <label>Username</label>
+            </div>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                <input type="password" id="register-password" required>
+                <label>Password</label>
+            </div>
+            <div class="remember-forgot"> <!-- Note: Class name might be confusing here, but structure is okay -->
+                <label>
+                    <input type="checkbox" id="register-terms" required>
+                    I agree to the <a href="#" id="show-terms-link" class="terms-link">&nbsp; terms & conditions</a>
+                </label>
+            </div>
+            <button type="button" class="btn" id="register-submit-btn">Register</button>
+            <div class="login-register">
+                <p>Already have an account? <a href="#" class="login-link">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+     <!-- Terms and Conditions Modal -->
+     <div id="terms-overlay" class="modal-overlay"></div>
+     <div id="terms-modal" class="modal">
+         <button id="close-modal-btn" class="modal-close-btn">×</button>
+         <h2>Terms and Conditions</h2>
+         <div class="modal-body">
+             <!-- Your placeholder terms content -->
+             <p>Please read these terms and conditions carefully before using Our Service.</p>
+             <h3>Interpretation and Definitions</h3>
+             <p>Words capitalized have meanings defined under the following conditions...</p>
+             <h3>Acknowledgement</h3>
+             <p>These are the Terms and Conditions governing the use of this Service...</p>
+             <p>By accessing or using the Service You agree to be bound by these Terms and Conditions...</p>
+             <h3>User Accounts</h3>
+             <p>When You create an account with Us, You must provide Us information that is accurate, complete, and current at all times...</p>
+             <h3>Termination</h3>
+             <p>We may terminate or suspend Your access immediately, without prior notice or liability, for any reason whatsoever, including without limitation if You breach these Terms and Conditions...</p>
+              <h3>Governing Law</h3>
+             <p>The laws of the Country, excluding its conflicts of law rules, shall govern this Terms and Your use of the Service...</p>
+              <h3>Disputes Resolution</h3>
+             <p>If You have any concern or dispute about the Service, You agree to first try to resolve the dispute informally by contacting the dormitory administration...</p>
+             <h3>Changes to These Terms and Conditions</h3>
+             <p>We reserve the right, at Our sole discretion, to modify or replace these Terms at any time...</p>
+             <h3>Contact Us</h3>
+             <p>If you have any questions about these Terms and Conditions, You can contact us:</p>
+             <ul>
+                 <li>By email: [Your Dormitory Email]</li>
+                 <li>By phone number: [Your Dormitory Phone Number]</li>
+             </ul>
+         </div>
+     </div>
+
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- Main Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // --- Element References ---
+            const wrapper = document.querySelector('.wrapper');
+            const loginButton = document.getElementById('login-btn');
+            const registerLink = document.querySelector('.register-link');
+            const loginLink = document.querySelector('.login-link');
+            const registerSubmitButton = document.getElementById('register-submit-btn');
+            const settingsTrigger = document.getElementById('settings-trigger');
+
+            // --- MODAL References ---
+            const termsModal = document.getElementById('terms-modal');
+            const termsOverlay = document.getElementById('terms-overlay');
+            const showTermsLink = document.getElementById('show-terms-link');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+
+
+            // Login/Register Form Switching (Existing)
+            if (registerLink && wrapper) {
+                registerLink.addEventListener('click', (e) => { e.preventDefault(); wrapper.classList.add('active'); });
+            } else console.error('Register link or wrapper not found');
+
+            if (loginLink && wrapper) {
+                loginLink.addEventListener('click', (e) => { e.preventDefault(); wrapper.classList.remove('active'); });
+            } else console.error('Login link or wrapper not found');
+
+            // Button Actions (Existing)
+            if (loginButton) loginButton.addEventListener('click', handleLogin);
+            else console.error('Login button (#login-btn) not found');
+
+            if (registerSubmitButton) registerSubmitButton.addEventListener('click', handleRegister);
+            else console.error('Register Submit button (#register-submit-btn) not found');
+
+            // Settings Button (Theme Toggle) Interaction (Existing)
+            if (settingsTrigger) settingsTrigger.addEventListener('click', handleThemeToggle);
+            else console.error('Settings trigger button (#settings-trigger) not found');
+
+            // --- MODAL Event Listeners ---
+            if (showTermsLink && termsModal && termsOverlay) {
+                showTermsLink.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent link default behavior
+                    termsOverlay.classList.add('visible');
+                    termsModal.classList.add('visible');
+                });
+            } else {
+                console.error("Modal trigger link, modal, or overlay not found");
+            }
+
+            // Helper function to close the modal
+            function closeModal() {
+                if (termsModal && termsOverlay) {
+                    termsModal.classList.remove('visible');
+                    termsOverlay.classList.remove('visible');
+                }
+            }
+
+            // Listener for the close button inside the modal
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeModal);
+            } else {
+                console.error("Close modal button not found");
+            }
+
+            // Listener for the overlay (close when clicking outside the modal)
+            if (termsOverlay) {
+                termsOverlay.addEventListener('click', (e) => {
+                    // Only close if the click is directly on the overlay
+                    if (e.target === termsOverlay) {
+                        closeModal();
+                    }
+                });
+            }
+
+            // Listener for the Escape key to close the modal
+             document.addEventListener('keydown', (e) => {
+                 if (e.key === 'Escape' && termsModal && termsModal.classList.contains('visible')) {
+                     closeModal();
+                 }
+             });
+
+
+
+            // --- Initial Setup --- (Existing)
+            applySavedTheme();
+
+        }); // End DOMContentLoaded
+
+        // --- Login Handler --- (Existing)
+        function handleLogin() {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const roleSelect = document.getElementById('role');
+            const username = usernameInput?.value.trim();
+            const password = passwordInput?.value.trim();
+            const role = roleSelect?.value;
+
+            if (!username || !password || !role) { alert('Please fill out Username, Password, and select a Role.'); return; }
+            console.log('Attempting Login:', { username, role });
+            // Simple validation/redirect based on role
+            if (role === 'admin') {
+                 window.location.href = 'Admin.html'; // Ensure this page exists
+            } else if (role === 'student') {
+                 window.location.href = 'StudentDashboard.html'; // Ensure this page exists
+            } else {
+                alert('Invalid role selected.'); // Should not happen if dropdown is required
+            }
+        }
+
+        // --- Register Handler --- (Existing - check terms)
+        function handleRegister() {
+             const emailInput = document.getElementById('register-email');
+             const usernameInput = document.getElementById('register-username');
+             const passwordInput = document.getElementById('register-password');
+             const termsCheckbox = document.getElementById('register-terms'); // Make sure ID matches
+             const email = emailInput?.value.trim();
+             const username = usernameInput?.value.trim();
+             const password = passwordInput?.value.trim();
+             const termsAgreed = termsCheckbox?.checked; // This check is important
+
+             if (!email || !username || !password) { alert('Please fill out Email, Username, and Password.'); return; }
+             // Crucial check: Ensure terms are agreed to
+             if (!termsAgreed) { alert('You must agree to the terms & conditions before registering.'); return; }
+
+             console.log('Attempting Registration:', { email, username });
+             // ** TODO: Send data to server for actual registration here **
+             // In a real app, you would POST this data and handle the response.
+             // For now, we just simulate success and redirect.
+             console.log('Redirecting to Selection Page');
+             window.location.href = 'Selection_Page.html'; // Ensure this file exists
+        }
+
+        // --- Theme Functions --- (Existing)
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('loginTheme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            updateThemeButtonIcon(savedTheme);
+        }
+
+        function handleThemeToggle() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            const newTheme = isDarkMode ? 'dark' : 'light';
+            localStorage.setItem('loginTheme', newTheme);
+            updateThemeButtonIcon(newTheme);
+        }
+
+        function updateThemeButtonIcon(theme){
+             const settingsTrigger = document.getElementById('settings-trigger');
+             if(settingsTrigger){
+                 settingsTrigger.innerHTML = theme === 'dark' ? '☀️' : '🌓'; // Sun for dark, Moon for light
+                 settingsTrigger.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+             }
+        }
+
+    </script>
+
+</body>
+</html>

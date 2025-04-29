@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSU Dormitory Admin Panel</title>
+    <style>
+        /* --- Consolidated CSS Goes Here --- */
+
+        /* General Body and Layout Styles */
+        body {
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 60px; /* Space for fixed header */
+            padding-left: 80px; /* Space for fixed sidebar */
+            box-sizing: border-box;
+
+            /* --- Background with Overlay MATCHING EXAMPLE --- */
+            /* Base fallback color (your original light green) */
+            background-color: rgb(205, 236, 178);
+
+            /* Layer 1: White overlay with 30% opacity */
+            /* Layer 2: The actual image */
+            background-image:
+                /* White overlay, 0.3 opacity */
+                linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)),
+                url('Logoo.png'); /* Ensure Logoo.png exists */
+
+            background-repeat: no-repeat;
+            background-position: center center;
+            /* Size: 'auto' for gradient, 'contain' for image */
+            background-size: auto, contain;
+            background-attachment: fixed;
+            color: #333; /* Default text color */
+             transition: background-color 0.3s, color 0.3s; /* Smooth theme transition */
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background-color: #c8e6c9; /* Light green */
+            padding: 5px 10px 5px 80px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            border-bottom: 1px solid #a5d6a7;
+             transition: background-color 0.3s, border-bottom-color 0.3s;
+        }
+
+        .search-bar {
+            margin-right: auto;
+        }
+
+        .search-bar input.indented {
+            background: url('Search_Icon.png') no-repeat right center; /* Ensure Search_Icon.png exists */
+            background-size: 16px 16px;
+            padding-left: 10px;
+            padding-right: 25px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 25px;
+            width: 200px;
+            vertical-align: middle;
+             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        /* Top Bar Icons Navigation */
+        nav.topbar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-right: 20px;
+        }
+
+        .notification-container,
+        .picon-container,
+        .setting-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-icon img,
+        .profile-icon img,
+        .setting-icon img {
+            height: 24px;
+            width: 24px;
+            display: block;
+            cursor: pointer; /* Indicate clickable if they link to sections */
+        }
+
+        /* Sidebar Navigation Styles */
+        nav.sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 70px;
+            height: 100vh;
+            padding-top: 60px;
+            background-color: #f1f8e9; /* Very light green */
+            border-right: 1px solid #c5e1a5;
+            z-index: 99;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            transition: background-color 0.3s, border-right-color 0.3s;
+        }
+
+        nav.sidebar a,
+        nav.sidebar .dropdown-trigger-wrapper {
+            display: block;
+            padding: 5px;
+            text-align: center;
+            cursor: pointer; /* Indicate clickable */
+            text-decoration: none; /* Remove underline from links */
+            color: inherit; /* Inherit color */
+            width: 100%; /* Ensure full width for click area */
+             transition: background-color 0.3s;
+        }
+
+        nav.sidebar img {
+            width: 32px;
+            height: 32px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        nav.sidebar a:hover,
+        nav.sidebar .dropdown-trigger-wrapper:hover {
+            background-color: #e8f5e9; /* Hover effect */
+        }
+        nav.sidebar a.active,
+        nav.sidebar .dropdown-trigger-wrapper.active {
+             background-color: #c8e6c9; /* Active state */
+             border-left: 3px solid #4caf50;
+        }
+
+         /* --- ADDED: Logout Button Style --- */
+        nav.sidebar #nav-logout {
+            margin-top: auto; /* Push to the bottom */
+            margin-bottom: 20px; /* Space from bottom edge */
+            padding: 10px 5px; /* Adjust padding */
+            border-top: 1px solid #c5e1a5; /* Separator line */
+        }
+         nav.sidebar #nav-logout:hover {
+             background-color: #ffdddd; /* Reddish hover for logout */
+         }
+         nav.sidebar #nav-logout img {
+             width: 28px; /* Slightly smaller icon if needed */
+             height: 28px;
+         }
+
+
+        /* Sidebar Dropdown Specific Styles */
+        .sidebar .dropdown {
+            position: relative;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .sidebar .dropdown-trigger-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .sidebar .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background-color: #f9f9f9;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 101;
+            border: 1px solid #ccc;
+            border-radius: 0 4px 4px 0;
+            white-space: nowrap;
+             transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .sidebar .dropdown-trigger-wrapper:hover .dropdown-content {
+            display: block;
+        }
+
+        .sidebar .dropdown-content a {
+            color: black;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-size: 11px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            width: auto; /* Reset width */
+            border-left: none; /* Reset border */
+            background-color: transparent; /* Reset background */
+             transition: background-color 0.3s, color 0.3s, border-bottom-color 0.3s;
+        }
+        .sidebar .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+
+        .sidebar .dropdown-content a:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* --- Main Content Area & Sections --- */
+        main.content {
+            padding: 20px; /* Use your original padding or adjust */
+            /* This area now lets the body background show through */
+            position: relative;
+            z-index: 1; /* Above the body background */
+        }
+
+        .page-section {
+            display: none; /* Hide all sections by default */
+            animation: fadeIn 0.5s ease-in-out; /* Add fade-in animation */
+        }
+
+        .page-section.active {
+            display: block; /* Show the active section */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+
+        /* --- Table Styles (Restore Original/Desired Backgrounds) --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid black;
+            /* Restore your original table background color */
+            background-color: rgb(205, 236, 178);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        thead th {
+            background-color: #f2f2f2; /* Your original header background */
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        tbody td {
+            /* Restore your original cell background */
+            background-color: #efe9e9;
+        }
+
+        tbody tr:hover td { /* Subtle hover */
+            background-color: #e9e5e5;
+        }
+
+        /* Specific Table Header Colors */
+        .header-green { background-color: #7ed663 !important; color: black; }
+        .header-red { background-color: #ff5959 !important; color: black; }
+        .header-grey { background-color: #b2b8b0 !important; color: black; }
+        .header-blue { background-color: #90caf9 !important; color: black; } /* Added for pending */
+
+
+        /* Specific Table Styles (Task/Maintenance/Room Change) */
+        .task-table th, .task-table td {
+            border: 2px solid black;
+            text-align: center;
+        }
+        .task-table thead th { background-color: #f2f2f2 !important; } /* Ensure override if needed */
+        .task-table .col-green { background-color: #6ac66b !important; }
+        .task-table .col-grey { background-color: rgb(216, 205, 205) !important; }
+        .task-table .col-lightgreen { background-color: rgb(205, 236, 178) !important; }
+        .task-table .status:hover { background-color: #99eba4; cursor: default;}
+        .task-table button { margin: 2px; padding: 4px 8px; border: none; border-radius: 4px; color: white; cursor: pointer;}
+        .task-table input[type="radio"] { margin-right: 5px; vertical-align: middle; cursor: pointer; }
+        .task-table label { margin-left: 2px; margin-right: 10px; cursor: pointer;}
+        .task-table button.accept-btn, button.edit-btn { background-color: #4CAF50; }
+        .task-table button.reject-btn, button.delete-btn { background-color: #f44336; }
+        .task-table button.missing-btn { background-color: #ff9800; } /* Orange for missing */
+        .task-table button.validated-btn { background-color: #2196F3; } /* Blue for validated */
+
+
+        /* List Styles within Tables */
+        td ul {
+            margin: 5px 0 0 0;
+            padding-left: 20px;
+            text-align: left;
+        }
+        td ul li {
+            margin-bottom: 3px;
+        }
+
+        /* Dropdown within Table Cells (Account/Applicant/Room Info) */
+        td.dropdwn {
+             position: relative; /* Needed for positioning dropdown content */
+             cursor: pointer;
+        }
+        td.dropdwn:hover .dropdwn-content { /* Show on hover of the TD */
+             display: block;
+        }
+
+        td .dropdwn-content {
+            display: none;
+            padding: 15px;
+            margin-top: 0; /* Remove top margin */
+            background-color: #ffffff; /* White background for details */
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: absolute; /* Position relative to td.dropdwn */
+            left: 0;
+            right: 0; /* Stretch full width */
+            z-index: 5; /* Above other table rows */
+            border-top: none; /* Remove dashed line */
+             transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        td .dropdwn-content p {
+            margin: 6px 0;
+            text-align: left;
+            line-height: 1.4;
+        }
+        td .dropdwn-content b {
+            display: inline-block;
+            min-width: 120px; /* Adjust alignment */
+            color: #555;
+             transition: color 0.3s;
+        }
+
+        /* Action Buttons/Dropdown (Edit/Delete/Deactivate etc.) */
+        .actions-container {
+            position: absolute;
+            top: 10px; /* Adjust position */
+            right: 10px;
+            z-index: 6;
+        }
+
+        .action-dropdown-trigger {
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 3px 8px;
+            font-size: 14px;
+            line-height: 1;
+            font-weight: bold;
+             transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .action-dropdown-trigger:hover {
+            background-color: #ddd;
+        }
+
+        .action-choices {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #f9f9f9;
+            min-width: 110px; /* Adjust width */
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 7;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 3px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* Show choices on hover of the CONTAINER */
+        .actions-container:hover .action-choices {
+            display: block;
+        }
+
+        .action-choices a {
+            color: black;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 11px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s, color 0.3s, border-bottom-color 0.3s;
+        }
+        .action-choices a:last-child { border-bottom: none; }
+        .action-choices a:hover { background-color: #e0e0e0; }
+
+        /* Document Viewer Popup (Approved Applicants) */
+        .doc-viewer-trigger button {
+            float: right;
+            margin: 10px 5px 0 0;
+            background: none;
+            border: none;
+            color: #007bff; /* Standard link blue */
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .doc-viewer-content {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 40px; /* Adjust position relative to cell */
+            background-color: #f0fff0; /* Light green background */
+            border: 1px solid #9ccc65;
+            padding: 15px;
+            width: 350px; /* Adjust width */
+            max-height: 400px; /* Limit height */
+            overflow-y: auto; /* Add scroll if needed */
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 8;
+            text-align: left;
+             transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .doc-viewer-trigger:hover .doc-viewer-content { display: block; }
+
+        .doc-viewer-content h4 { margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px; transition: border-bottom-color 0.3s;}
+        .doc-viewer-content ul { list-style: none; padding: 0; margin-top: 10px; }
+        .doc-viewer-content li { margin-bottom: 15px; }
+        .doc-viewer-content img {
+            width: 100%;
+            height: auto;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            cursor: zoom-in; /* Indicate clickable for modal */
+            transition: border-color 0.3s;
+        }
+
+        /* Reports and Notifications Page Styles */
+        .report-notification-section { /* Style the container TD differently */
+            background-color: #f5f5f5 !important; /* Use important if needed to override tbody td */
+             transition: background-color 0.3s;
+        }
+        .report-notification-section .drop-trigger {
+             color: #0056b3;
+             font-weight: bold;
+             cursor: pointer;
+             display: block;
+             padding: 10px;
+             border-bottom: 1px solid #ddd;
+              transition: background-color 0.3s, color 0.3s, border-bottom-color 0.3s;
+        }
+         .report-notification-section .drop-trigger:hover {
+             background-color: #e9e9e9;
+        }
+
+        .report-notification-section .dropdwn-content {
+            padding: 15px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            box-shadow: none;
+            position: relative; /* Not absolute */
+            display: none; /* Initially hidden */
+            margin-top: 0;
+             transition: background-color 0.3s, border-color 0.3s;
+        }
+
+
+        .report-form button, .notify-form button {
+            background-color: #5cb85c;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .report-form button:hover, .notify-form button:hover { background-color: #4cae4c; }
+
+        .report-form .report-feedback,
+        .notify-form .report-feedback /* Reusing class */
+        {
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+            color: #3c763d;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            text-align: center;
+             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        .report-content-display {
+            border-radius: 5px;
+            background-color:#f8f8f8;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            min-height: 60px;
+            font-style: italic;
+            color: #555;
+            white-space: pre-wrap; /* Preserve line breaks */
+             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        .notify-form { padding: 10px; }
+        .notify-form .search-container { text-align: right; margin-bottom: 10px; }
+        .notify-form input[type="text"].search-input {
+            border: 1px solid #ccc;
+            padding: 6px;
+            border-radius: 4px;
+            width: 250px;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        .notify-form textarea {
+            width: 100%; /* Full width */
+            box-sizing: border-box; /* Include padding/border in width */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+            resize: vertical;
+             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .notify-form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .notify-form .form-row { display: flex; align-items: center; margin-bottom: 10px; gap: 10px;}
+        .notify-form .form-row label{ min-width: 60px; margin-bottom: 0; }
+        .notify-form .form-row textarea { flex-grow: 1; margin-bottom: 0; height: 30px; resize: none; }
+        .notify-form .message-area textarea { height: 100px; resize: vertical;}
+        .notify-form .button-container { text-align: right; }
+
+
+        /* Info Images (Profile/Notification) */
+        .info-image {
+            display: block;
+            max-width: 500px;
+            height: auto;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            padding: 5px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+             transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* Footer Count Styles */
+        tfoot th {
+            text-align: right !important;
+            background-color: #a5d6a7 !important; /* Footer color */
+            color: black;
+            font-weight: bold;
+            padding-right: 20px;
+            border-top: 2px solid black;
+            transition: background-color 0.3s, border-top-color 0.3s, color 0.3s;
+        }
+
+        /* Headings for Sections */
+        .page-section h2 {
+             margin-top: 0;
+             margin-bottom: 20px;
+             padding-bottom: 10px;
+             border-bottom: 2px solid #a5d6a7;
+             color: #388e3c; /* Darker green */
+              transition: border-bottom-color 0.3s, color 0.3s;
+        }
+
+        /* --- Settings Section Specific Styles --- */
+        #settings .setting-category {
+            background-color: #f8f9fa; /* Light background for category block */
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        #settings h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057; /* Darker grey for subheadings */
+            font-size: 14px;
+             transition: border-bottom-color 0.3s, color 0.3s;
+        }
+
+        .settings-form .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping for smaller screens */
+            align-items: center;
+        }
+
+        .settings-form label {
+            display: block; /* Changed from inline-block */
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+            flex-basis: 200px; /* Fixed width for labels */
+            margin-right: 10px; /* Space between label and input */
+             transition: color 0.3s;
+        }
+
+        .settings-form input[type="password"],
+        .settings-form input[type="text"], /* Added for consistency if needed */
+        .settings-form input[type="email"], /* Added for consistency if needed */
+        .settings-form select {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 12px;
+            flex-grow: 1; /* Allow input to take remaining space */
+            min-width: 200px; /* Minimum width for input */
+            background-color: #fff; /* Explicit background */
+             transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+         .settings-form input[type="checkbox"] {
+            margin-right: 8px;
+            vertical-align: middle;
+            width: auto; /* Override general input width */
+            min-width: auto;
+         }
+        .settings-form .checkbox-group label {
+             flex-basis: auto; /* Let checkbox labels take natural width */
+             margin-bottom: 0;
+             font-weight: normal;
+        }
+         .settings-form .checkbox-group {
+            flex-wrap: nowrap; /* Prevent checkbox label wrapping */
+            margin-bottom: 10px;
+         }
+
+
+        .setting-save-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: background-color 0.2s ease;
+        }
+        .setting-save-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .setting-feedback {
+            display: inline-block; /* Changed from block */
+            margin-left: 15px; /* Space after button */
+            font-size: 11px;
+            font-style: italic;
+            color: #28a745; /* Green for success */
+        }
+        .setting-feedback.error {
+            color: #dc3545; /* Red for error */
+        }
+
+        /* --- Toggle Switch Styles --- */
+        .toggle-group {
+            align-items: center;
+        }
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 44px; /* Smaller switch */
+          height: 24px; /* Smaller switch */
+          vertical-align: middle;
+        }
+        .switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 18px; /* Smaller slider */
+          width: 18px;  /* Smaller slider */
+          left: 3px;   /* Adjust position */
+          bottom: 3px; /* Adjust position */
+          background-color: white;
+          transition: .4s;
+        }
+        input:checked + .slider {
+          background-color: #2196F3; /* Blue when checked */
+        }
+        input:focus + .slider {
+          box-shadow: 0 0 1px #2196F3;
+        }
+        input:checked + .slider:before {
+          transform: translateX(20px); /* Adjust slide distance */
+        }
+        /* Rounded sliders */
+        .slider.round {
+          border-radius: 24px;
+        }
+        .slider.round:before {
+          border-radius: 50%;
+        }
+
+        /* --- Dark Mode Styles (Expand as needed) --- */
+        body.dark-mode {
+            background-color: #333; /* Dark background */
+            color: #f1f1f1; /* Light text */
+
+            /* Adjust overlay for dark mode */
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), /* Darker overlay */
+                url('Logoo.png');
+        }
+        body.dark-mode header { background-color: #444; border-bottom-color: #555; }
+        body.dark-mode nav.sidebar { background-color: #3a3a3a; border-right-color: #555; }
+        /* --- ADDED: Dark Mode Logout Button --- */
+         body.dark-mode nav.sidebar #nav-logout { border-top-color: #555; }
+         body.dark-mode nav.sidebar #nav-logout:hover { background-color: #5a3a3a; }
+
+        body.dark-mode .page-section h2 { color: #a5d6a7; border-bottom-color: #555; }
+        body.dark-mode table { background-color: #555; border-color: #777; }
+        body.dark-mode th, body.dark-mode td { border-color: #777; color: #f1f1f1; }
+        body.dark-mode thead th { background-color: #4a4a4a !important; } /* Use important if needed */
+        body.dark-mode tbody td { background-color: #606060 !important; } /* Use important if needed */
+        body.dark-mode tbody tr:hover td { background-color: #6a6a6a !important; }
+        body.dark-mode tfoot th { background-color: #4a4a4a !important; border-top-color: #777; color: #ccc;}
+
+        body.dark-mode .search-bar input.indented { background-color: #555; border-color: #777; color: #f1f1f1; }
+        body.dark-mode nav.sidebar a:hover,
+        body.dark-mode nav.sidebar .dropdown-trigger-wrapper:hover { background-color: #4a4a4a; }
+        body.dark-mode nav.sidebar a.active,
+        body.dark-mode nav.sidebar .dropdown-trigger-wrapper.active { background-color: #555; border-left-color: #7ed663; }
+
+        body.dark-mode .sidebar .dropdown-content { background-color: #4a4a4a; border-color: #666; }
+        body.dark-mode .sidebar .dropdown-content a { color: #f1f1f1; border-bottom-color: #666;}
+        body.dark-mode .sidebar .dropdown-content a:hover { background-color: #5a5a5a; }
+
+        body.dark-mode td .dropdwn-content { background-color: #555; border-color: #777;}
+        body.dark-mode td .dropdwn-content b { color: #ccc; }
+
+        body.dark-mode .action-dropdown-trigger { background-color: #555; border-color: #777; }
+        body.dark-mode .action-dropdown-trigger:hover { background-color: #666; }
+        body.dark-mode .action-choices { background-color: #4a4a4a; border-color: #666; }
+        body.dark-mode .action-choices a { color: #f1f1f1; border-bottom-color: #666; }
+        body.dark-mode .action-choices a:hover { background-color: #5a5a5a; }
+
+        body.dark-mode .doc-viewer-content { background-color: #405d40; border-color: #6a9c6a; }
+        body.dark-mode .doc-viewer-content h4 { border-bottom-color: #666; }
+        body.dark-mode .doc-viewer-content img { border-color: #666; }
+        body.dark-mode .doc-viewer-trigger button { color: #6cb4ff; }
+
+
+        body.dark-mode .report-notification-section { background-color: #444 !important; }
+        body.dark-mode .report-notification-section .drop-trigger { color: #6cb4ff; border-bottom-color: #666;}
+        body.dark-mode .report-notification-section .drop-trigger:hover { background-color: #555; }
+        body.dark-mode .report-notification-section .dropdwn-content { background-color: #555; border-color: #777;}
+        body.dark-mode .report-form .report-feedback,
+        body.dark-mode .notify-form .report-feedback { background-color: #2e4b37; border-color: #4a7c59; color: #a5d6a7;}
+        body.dark-mode .report-content-display { background-color: #4a4a4a; border-color: #666; color: #ccc; }
+        body.dark-mode .notify-form input[type="text"].search-input,
+        body.dark-mode .notify-form textarea { background-color: #555; border-color: #777; color: #f1f1f1; }
+        body.dark-mode .notify-form label { color: #ccc; }
+
+        body.dark-mode .info-image { background-color: #444; border-color: #666; }
+
+        /* Settings Dark Mode */
+        body.dark-mode #settings .setting-category { background-color: #4a4a4a; border-color: #666; }
+        body.dark-mode #settings h3 { color: #ccc; border-bottom-color: #666;}
+        body.dark-mode .settings-form label { color: #ccc; }
+        body.dark-mode .settings-form input[type="password"],
+        body.dark-mode .settings-form input[type="text"],
+        body.dark-mode .settings-form input[type="email"],
+        body.dark-mode .settings-form select {
+            background-color: #555;
+            border-color: #777;
+            color: #f1f1f1;
+        }
+        body.dark-mode .slider { background-color: #555; }
+        body.dark-mode input:checked + .slider { background-color: #007bff; } /* Keep blue for checked */
+        body.dark-mode .setting-feedback { color: #a5d6a7; }
+        body.dark-mode .setting-feedback.error { color: #ff8a8a; }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="search-bar">
+            <input class="indented" type="text" placeholder="Search...">
+        </div>
+        <nav class="topbar">
+            <div class="notification-container">
+                <div class="notification-icon">
+                    <a onclick="showSection('notification-info')" title="Notifications">
+                        <img src="Notif_Icon.png" alt="Notifications"> <!-- Ensure Notif_Icon.png exists -->
+                    </a>
+                </div>
+            </div>
+            <div class="picon-container">
+                <div class="profile-icon">
+                    <a onclick="showSection('profile-info')" title="Profile">
+                        <img src="Profile_Icon.png" alt="Profile"> <!-- Ensure Profile_Icon.png exists -->
+                    </a>
+                </div>
+            </div>
+            <div class="setting-container">
+                <div class="setting-icon">
+                    <a onclick="showSection('settings')" title="Settings">
+                        <img src="Setting_Icon.png" alt="Settings"> <!-- Ensure Setting_Icon.png exists -->
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <a onclick="showSection('home')" title="Home" id="nav-home">
+            <img src="Home_Icon.png" alt="Home"> <!-- Ensure Home_Icon.png exists -->
+        </a>
+        <div class="dropdown">
+            <div class="dropdown-trigger-wrapper" title="Room Management">
+                <img src="Room_Management_Icon.png" alt="Room Management"> <!-- Ensure Room_Management_Icon.png exists -->
+                <div class="dropdown-content">
+                    <a onclick="showSection('available-rooms')" id="nav-available-rooms">Available Rooms</a>
+                    <a onclick="showSection('occupied-rooms')" id="nav-occupied-rooms">Fully Occupied Rooms</a>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown">
+            <div class="dropdown-trigger-wrapper" title="Task Management">
+                <img src="Task_Management_Icon.png" alt="Task Management"> <!-- Ensure Task_Management_Icon.png exists -->
+                <div class="dropdown-content">
+                    <a onclick="showSection('task-schedule')" id="nav-task-schedule">Task Schedule</a>
+                    <a onclick="showSection('task-change')" id="nav-task-change">Task Change Request</a>
+                    <a onclick="showSection('task-compliance')" id="nav-task-compliance">Task Compliance Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown">
+            <div class="dropdown-trigger-wrapper" title="Account Management">
+                <img src="Account_Management_Icon.png" alt="Account Management"> <!-- Ensure Account_Management_Icon.png exists -->
+                <div class="dropdown-content">
+                  <a onclick="showSection('active-accounts')" id="nav-active-accounts">Active Accounts</a>
+                  <a onclick="showSection('deactivated-accounts')" id="nav-deactivated-accounts">Deactivated Accounts</a>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown">
+             <div class="dropdown-trigger-wrapper" title="Application Management">
+                <img src="Application_Management_Icon.png" alt="Application Management"> <!-- Ensure Application_Management_Icon.png exists -->
+                <div class="dropdown-content">
+                  <a onclick="showSection('approved-applicants')" id="nav-approved-applicants">Approved Applicants</a>
+                  <a onclick="showSection('rejected-applicants')" id="nav-rejected-applicants">Rejected Applicants</a>
+                  <a onclick="showSection('pending-applicants')" id="nav-pending-applicants">Pending Applicants</a>
+                </div>
+            </div>
+        </div>
+        <a onclick="showSection('room-change')" title="Room Change Request" id="nav-room-change">
+            <img src="Room_Change_Icon.png" alt="Room Change Request"> <!-- Ensure Room_Change_Icon.png exists -->
+        </a>
+        <a onclick="showSection('reports-notifications')" title="Reports and Notifications" id="nav-reports-notifications">
+            <img src="Notif_Icon(2).png" alt="Reports and Notifications"> <!-- Ensure Notif_Icon(2).png exists -->
+        </a>
+        <a onclick="showSection('maintenance-request')" title="Maintenance Request" id="nav-maintenance-request">
+            <img src="Maintenence_Request_Icon.png" alt="Maintenance Request"> <!-- Ensure Maintenence_Request_Icon.png exists -->
+        </a>
+
+         <!-- ADDED: Logout Button -->
+         <a onclick="handleLogout()" title="Logout" id="nav-logout">
+             <img src="logout.png" alt="Logout"> <!-- Ensure Logout_Icon.png exists -->
+         </a>
+    </nav>
+
+    <main class="content">
+        <!-- =================================== -->
+        <!-- == PAGE SECTIONS GO HERE == -->
+        <!-- =================================== -->
+
+        <!-- Home Section -->
+        <div id="home" class="page-section active">
+            <h2>Home / Dashboard</h2>
+            <p>Welcome to the BSU Dormitory Administration Panel.</p>
+            <p>Use the sidebar navigation to access different management sections.</p>
+            <!-- Add dashboard widgets or summaries here if desired -->
+        </div>
+
+        <!-- Available Rooms Section -->
+        <div id="available-rooms" class="page-section">
+             <h2>Available Rooms</h2>
+             <table>
+                 <thead>
+                     <tr> <th class="header-green">Available Rooms:</th> </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td class="dropdwn"> Room 101
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 2</p> <p><b>Slots Available:</b> 2</p> <p><b>Occupants Names:</b></p> <ul> <li>Perez, Van Doe T.</li> <li>Travis, Donnie K.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Room 102
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 2</p> <p><b>Slots Available:</b> 2</p> <p><b>Occupants Names:</b></p> <ul> <li>Alejandro, Jenaro Earl J.</li> <li>Elton, Darrell S.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Room 103
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 3</p> <p><b>Slots Available:</b> 1</p> <p><b>Occupants Names:</b></p> <ul> <li>Nicholson, Jameson M.</li> <li>Vera, Bobby S.</li> <li>Zambrano, Nelson R.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Room 104
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 2</p> <p><b>Slots Available:</b> 2</p> <p><b>Occupants Names:</b></p> <ul> <li>Milton, Reginald S.</li> <li>Wilmer, Caelan Flint W.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Room 106
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 2</p> <p><b>Slots Available:</b> 2</p> <p><b>Occupants Names:</b></p> <ul> <li>Ortega, Zach Daren T.</li> <li>Paulino, Zacarias G.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                 </tbody>
+                 <tfoot> <tr> <th>No. of Available Slots: 9 | No. of Available Rooms: 5</th> </tr> </tfoot>
+             </table>
+        </div>
+
+        <!-- Occupied Rooms Section -->
+        <div id="occupied-rooms" class="page-section">
+            <h2>Fully Occupied Rooms</h2>
+             <table>
+                 <thead> <tr> <th class="header-red">Fully Occupied Rooms:</th> </tr> </thead>
+                 <tbody>
+                     <tr>
+                         <td class="dropdwn"> Room 105
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 4</p> <p><b>Occupants Names:</b></p> <ul> <li>Camilo, Abraham C.</li> <li>Casas, Kieran Cyril A.</li> <li>Matos, Sylvester B.</li> <li>Warren Hector D.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Room 210
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 4</p> <p><b>Occupants Names:</b></p> <ul> <li>Alvaro, Calvin B.</li> <li>Casimir, Rogelio L.</li> <li>Hermegaldo, Elvin C.</li> <li>Winfield, Nicholas N.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                      <tr>
+                         <td class="dropdwn"> Room 211
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 4</p> <p><b>Occupants Names:</b></p> <ul> <li>Benecio, Kriby Leonard A.</li> <li>Denzil, Xavier H.</li> <li>Fonseca, Ebenezer T.</li> <li>Terry, Francisco Glen B.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                      <tr>
+                         <td class="dropdwn"> Room 213
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 4</p> <p><b>Occupants Names:</b></p> <ul> <li>Alberson, Darell C.</li> <li>Candido, Roosevelt G.</li> <li>Lamberto, Victor Cesar O.</li> <li>Paddon, Chadler Dominick R.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                      <tr>
+                         <td class="dropdwn"> Room 214
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 4</p> <p><b>Occupants Names:</b></p> <ul> <li>Danilo, Niles F.</li> <li>Fausto, Tristan L.</li> <li>Villanueva, Lucas Will</li> <li>Vincio, Rolland Oswald D.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                      <tr>
+                         <td class="dropdwn"> Room 216
+                             <div class="dropdwn-content">
+                                 <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> </div> </div>
+                                 <p><b>Capacity:</b> 4</p> <p><b>No. of Occupants:</b> 4</p> <p><b>Occupants Names:</b></p> <ul> <li>Bentley, Lamar Smith R.</li> <li>Delores, Jordan Stephen F.</li> <li>Foson, Oliver Wade B.</li> <li>Tobias, Arlo Brant C.</li> </ul>
+                             </div>
+                         </td>
+                     </tr>
+                 </tbody>
+                 <tfoot> <tr> <th>No. of Fully Occupied Rooms: 6</th> </tr> </tfoot>
+             </table>
+        </div>
+
+        <!-- Task Schedule Section -->
+        <div id="task-schedule" class="page-section">
+            <h2>Task Schedule</h2>
+            <table class="task-table">
+                <thead>
+                    <tr> <th class="col-green">Task Name</th> <th>Assigned To</th> <th class="col-green">Due Date</th> <th>Status</th> <th>Action</th> </tr>
+                </thead>
+                <tbody>
+                    <tr> <td class="col-green">Clean CR</td> <td>John</td> <td class="col-green">Friday</td> <td class="status">Pending</td> <td> <button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button> </td> </tr>
+                    <tr> <td class="col-green">Clean front yard</td> <td>Michael</td> <td class="col-green">Sunday</td> <td class="status">Completed</td> <td> <button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button> </td> </tr>
+                    <tr> <td class="col-green">Clean windows</td> <td>Daril</td> <td class="col-green">Sunday</td> <td class="status">Pending</td> <td> <button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button> </td> </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Task Change Section -->
+        <div id="task-change" class="page-section">
+             <h2>Task Change Request</h2>
+             <table class="task-table">
+                 <thead>
+                     <tr> <th class="col-green">Task Name</th> <th>Assigned To</th> <th class="col-green">Reason</th> <th>Action</th> </tr>
+                 </thead>
+                 <tbody>
+                     <tr> <td class="col-green">Clean CR</td> <td>John</td> <td class="col-green">Conflict in schedule</td> <td> <input type="radio" id="task1_accept" name="task1_action"><label for="task1_accept"><button class="accept-btn">Accept</button></label> <input type="radio" id="task1_reject" name="task1_action"><label for="task1_reject"><button class="reject-btn">Reject</button></label> </td> </tr>
+                     <tr> <td class="col-green">Clean front yard</td> <td>Michael</td> <td class="col-green">Not enough time</td> <td> <input type="radio" id="task2_accept" name="task2_action"><label for="task2_accept"><button class="accept-btn">Accept</button></label> <input type="radio" id="task2_reject" name="task2_action"><label for="task2_reject"><button class="reject-btn">Reject</button></label> </td> </tr>
+                     <tr> <td class="col-green">Clean windows</td> <td>Daril</td> <td class="col-green">Having fever</td> <td> <input type="radio" id="task3_accept" name="task3_action"><label for="task3_accept"><button class="accept-btn">Accept</button></label> <input type="radio" id="task3_reject" name="task3_action"><label for="task3_reject"><button class="reject-btn">Reject</button></label> </td> </tr>
+                 </tbody>
+             </table>
+        </div>
+
+        <!-- Task Compliance Section -->
+        <div id="task-compliance" class="page-section">
+             <h2>Task Compliance Report</h2>
+             <table class="task-table">
+                 <thead>
+                     <tr> <th class="col-green">Task Name</th> <th>Assigned To</th> <th class="col-green">Compliance</th> <th>Reason (If Pending/Missing)</th> <th class="col-green">Status</th> <th>Action</th> </tr>
+                 </thead>
+                 <tbody>
+                     <tr> <td class="col-green">Clean CR</td> <td>John</td> <td class="col-green">Missing</td> <td>Conflict in schedule</td> <td class="col-green">Pending</td> <td><button class="missing-btn">Mark Missing</button></td> </tr>
+                     <tr> <td class="col-green">Clean front yard</td> <td>Michael</td> <td class="col-green">Completed</td> <td>N/A</td> <td class="col-green">Completed</td> <td><button class="validated-btn">Validated</button></td> </tr>
+                     <tr> <td class="col-green">Clean windows</td> <td>Daril</td> <td class="col-green">Missing</td> <td>Having fever</td> <td class="col-green">Pending</td> <td><button class="missing-btn">Mark Missing</button></td> </tr>
+                 </tbody>
+             </table>
+        </div>
+
+        <!-- Active Accounts Section -->
+        <div id="active-accounts" class="page-section">
+            <h2>Active Accounts</h2>
+            <table>
+                <thead> <tr> <th class="header-green">Active Accounts:</th> </tr> </thead>
+                <tbody>
+                     <tr>
+                         <td class="dropdwn"> Makabanal, Jack T.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Deactivate</a> <a href="#">Edit</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2405432</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Makasalanan, Jhonnie A.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Deactivate</a> <a href="#">Edit</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2405876</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Pardinas, Jodel D.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Deactivate</a> <a href="#">Edit</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2409743</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Perez, Jodel D.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Deactivate</a> <a href="#">Edit</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 240475</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Pringko, Daniel S.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Deactivate</a> <a href="#">Edit</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2402463</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Savino, Peter L.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Deactivate</a> <a href="#">Edit</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2406743</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> </div>
+                         </td>
+                     </tr>
+                </tbody>
+                <tfoot> <tr> <th>No. of Active Accounts: 460</th> </tr> </tfoot>
+            </table>
+        </div>
+
+        <!-- Deactivated Accounts Section -->
+        <div id="deactivated-accounts" class="page-section">
+            <h2>Deactivated Accounts</h2>
+            <table>
+                <thead> <tr> <th class="header-grey">Deactivated Accounts:</th> </tr> </thead>
+                <tbody>
+                    <tr>
+                        <td class="dropdwn"> Belanger, Erick Steph S.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Reactivate</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 200525</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Deactivated Date:</b> May 1, 2023</p> <p><b>Reason of Deactivation:</b> Graduated SY.2022-2023</p> </div>
+                        </td>
+                    </tr>
+                    <tr>
+                         <td class="dropdwn"> Facundo, Colbert B.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Reactivate</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2096432</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Deactivated Date:</b> May 1, 2023</p> <p><b>Reason of Deactivation:</b> Graduated SY.2022-2023</p> </div>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td class="dropdwn"> Joel, Ivers Cole B.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Reactivate</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2026392</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Deactivated Date:</b> May 1, 2023</p> <p><b>Reason of Deactivation:</b> Graduated SY.2022-2023</p> </div>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td class="dropdwn"> Santiago, Archie M.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Reactivate</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2029532</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Deactivated Date:</b> May 1, 2023</p> <p><b>Reason of Deactivation:</b> Graduated SY.2022-2023</p> </div>
+                        </td>
+                    </tr>
+                    <tr>
+                         <td class="dropdwn"> Sebastian, Jewell S.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Reactivate</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2005432</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Deactivated Date:</b> May 1, 2023</p> <p><b>Reason of Deactivation:</b> Graduated SY.2022-2023</p> </div>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td class="dropdwn"> Simon, Russel Sid A.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Reactivate</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2005136</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Deactivated Date:</b> May 1, 2023</p> <p><b>Reason of Deactivation:</b> Graduated SY.2022-2023</p> </div>
+                        </td>
+                    </tr>
+                </tbody>
+                 <tfoot> <tr> <th>No. of Deactivated Accounts: 6</th> </tr> </tfoot>
+            </table>
+        </div>
+
+        <!-- Approved Applicants Section -->
+        <div id="approved-applicants" class="page-section">
+            <h2>Approved Applicants</h2>
+            <table>
+                 <thead> <tr> <th class="header-green">Approved Applicants:</th> </tr> </thead>
+                 <tbody>
+                      <tr>
+                          <td class="dropdwn"> Makabanal, Jack T.
+                              <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2405432</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> <div class="doc-viewer-trigger"> <button><i><u>View Submitted Documents</u></i></button> <div class="doc-viewer-content"> <h4>Submitted Files:</h4> <ul> <li><b>Proof of Enrollment:</b><img src="Smple_Docmnt_Pic.png" alt="Proof of enrollment"></li> <!-- Ensure Smple_Docmnt_Pic.png exists --> <li><b>Birth Certificate:</b><img src="Smple_Docmnt_Pic.png" alt="Birth Certificate"></li> <li><b>Good Moral:</b><img src="Smple_Docmnt_Pic.png" alt="Good Moral"></li> </ul> </div> </div> </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="dropdwn"> Makasalanan, Jhonnie A.
+                              <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2405876</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> <div class="doc-viewer-trigger"> <button><i><u>View Submitted Documents</u></i></button> <div class="doc-viewer-content"><h4>Submitted Files:</h4><ul><li><b>Proof of Enrollment:</b><img src="Smple_Docmnt_Pic.png" alt="Proof of enrollment"></li><li><b>Birth Certificate:</b><img src="Smple_Docmnt_Pic.png" alt="Birth Certificate"></li><li><b>Good Moral:</b><img src="Smple_Docmnt_Pic.png" alt="Good Moral"></li></ul></div> </div> </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="dropdwn"> Pardinas, Jodel D.
+                              <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2409743</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> <div class="doc-viewer-trigger"> <button><i><u>View Submitted Documents</u></i></button> <div class="doc-viewer-content"><h4>Submitted Files:</h4><ul><li><b>Proof of Enrollment:</b><img src="Smple_Docmnt_Pic.png" alt="Proof of enrollment"></li><li><b>Birth Certificate:</b><img src="Smple_Docmnt_Pic.png" alt="Birth Certificate"></li><li><b>Good Moral:</b><img src="Smple_Docmnt_Pic.png" alt="Good Moral"></li></ul></div> </div> </div>
+                          </td>
+                      </tr>
+                       <tr>
+                          <td class="dropdwn"> Perez, Jodel D.
+                              <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 240475</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> <div class="doc-viewer-trigger"> <button><i><u>View Submitted Documents</u></i></button> <div class="doc-viewer-content"><h4>Submitted Files:</h4><ul><li><b>Proof of Enrollment:</b><img src="Smple_Docmnt_Pic.png" alt="Proof of enrollment"></li><li><b>Birth Certificate:</b><img src="Smple_Docmnt_Pic.png" alt="Birth Certificate"></li><li><b>Good Moral:</b><img src="Smple_Docmnt_Pic.png" alt="Good Moral"></li></ul></div> </div> </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="dropdwn"> Pringko, Daniel S.
+                              <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2402463</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> <div class="doc-viewer-trigger"> <button><i><u>View Submitted Documents</u></i></button> <div class="doc-viewer-content"><h4>Submitted Files:</h4><ul><li><b>Proof of Enrollment:</b><img src="Smple_Docmnt_Pic.png" alt="Proof of enrollment"></li><li><b>Birth Certificate:</b><img src="Smple_Docmnt_Pic.png" alt="Birth Certificate"></li><li><b>Good Moral:</b><img src="Smple_Docmnt_Pic.png" alt="Good Moral"></li></ul></div> </div> </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="dropdwn"> Savino, Peter L.
+                              <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Age:</b> 19</p> <p><b>Gender:</b> Male</p> <p><b>Student ID:</b> 2406743</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <br> <p><b>Registration Status:</b> Currently Enrolled</p> <p><b>Year Level:</b> 1</p> <div class="doc-viewer-trigger"> <button><i><u>View Submitted Documents</u></i></button> <div class="doc-viewer-content"><h4>Submitted Files:</h4><ul><li><b>Proof of Enrollment:</b><img src="Smple_Docmnt_Pic.png" alt="Proof of enrollment"></li><li><b>Birth Certificate:</b><img src="Smple_Docmnt_Pic.png" alt="Birth Certificate"></li><li><b>Good Moral:</b><img src="Smple_Docmnt_Pic.png" alt="Good Moral"></li></ul></div> </div> </div>
+                          </td>
+                      </tr>
+                 </tbody>
+                  <tfoot> <tr> <th>No. of Approved Applicants: 6</th> </tr> </tfoot>
+             </table>
+        </div>
+
+        <!-- Rejected Applicants Section -->
+        <div id="rejected-applicants" class="page-section">
+             <h2>Rejected Applicants</h2>
+             <table>
+                 <thead> <tr> <th class="header-red">Rejected Applicants:</th> </tr> </thead>
+                 <tbody>
+                    <tr>
+                         <td class="dropdwn"> Feliciano, John S.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2405926</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Reason of Rejection:</b> Incomplete Documents</p> </div>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td class="dropdwn"> Florencio, Ivor B.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2403945</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Reason of Rejection:</b> Incomplete Documents</p> </div>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td class="dropdwn"> Rogelio, Zane Raul L.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2405432</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Reason of Rejection:</b> Incomplete Documents</p> </div>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td class="dropdwn"> Silverio, Zac T.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2400465</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Reason of Rejection:</b> Incomplete Documents</p> </div>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td class="dropdwn"> Villiarno, Peter L.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2407524</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Reason of Rejection:</b> Incomplete Documents</p> </div>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td class="dropdwn"> Zavid, Noel Val D.
+                            <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2405395</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Reason of Rejection:</b> Incomplete Documents</p> </div>
+                        </td>
+                    </tr>
+                 </tbody>
+                 <tfoot> <tr> <th>No. of Rejected Applicants: 6</th> </tr> </tfoot>
+             </table>
+        </div>
+
+        <!-- Pending Applicants Section -->
+        <div id="pending-applicants" class="page-section">
+             <h2>Pending Applicants</h2>
+             <table>
+                 <thead> <tr> <th class="header-blue">Pending Applicants:</th> </tr> </thead>
+                 <tbody>
+                     <tr>
+                         <td class="dropdwn"> Artemio, Noah G.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Approve</a> <a href="#">Reject</a> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2405937</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Status:</b> Pending</p> </div>
+                         </td>
+                     </tr>
+                      <tr>
+                         <td class="dropdwn"> Cartino, Alejo H.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Approve</a> <a href="#">Reject</a> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2403946</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Status:</b> Pending</p> </div>
+                         </td>
+                     </tr>
+                      <tr>
+                         <td class="dropdwn"> Felipe, Robert L.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Approve</a> <a href="#">Reject</a> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2405083</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Status:</b> Pending</p> </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Emillio, Gerald S.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Approve</a> <a href="#">Reject</a> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2404752</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Status:</b> Pending</p> </div>
+                         </td>
+                     </tr>
+                      <tr>
+                         <td class="dropdwn"> Padilla, Ricky Huey M.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Approve</a> <a href="#">Reject</a> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2406395</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Status:</b> Pending</p> </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="dropdwn"> Transito, Garett Omar P.
+                             <div class="dropdwn-content"> <div class="actions-container"> <button class="action-dropdown-trigger">...</button> <div class="action-choices"> <a href="#">Approve</a> <a href="#">Reject</a> <a href="#">Edit</a> <a href="#">Delete</a> </div> </div> <p><b>Student ID:</b> 2405862</p> <p><b>Degree Program:</b> Bachelor of Science in Information Technology</p> <p><b>Status:</b> Pending</p> </div>
+                         </td>
+                     </tr>
+                 </tbody>
+                 <tfoot> <tr> <th>No. of Pending Applicants: 6</th> </tr> </tfoot>
+             </table>
+        </div>
+
+        <!-- Room Change Section -->
+        <div id="room-change" class="page-section">
+             <h2>Room Change Request</h2>
+             <table class="task-table">
+                 <thead>
+                     <tr> <th class="col-green">Present Room</th> <th>Change To Room</th> <th class="col-green">Reason</th> <th>Action</th> </tr>
+                 </thead>
+                 <tbody>
+                     <tr> <td class="col-green">102</td> <td>202</td> <td class="col-green">Roommates are very noisy and I can't focus while studying.</td> <td> <input type="radio" id="rc1_accept" name="rc1_action"><label for="rc1_accept"><button class="accept-btn">Accept</button></label> <input type="radio" id="rc1_reject" name="rc1_action"><label for="rc1_reject"><button class="reject-btn">Reject</button></label> </td> </tr>
+                     <tr> <td class="col-green">201</td> <td>108</td> <td class="col-green">I have a hard time going up the stairs.</td> <td> <input type="radio" id="rc2_accept" name="rc2_action"><label for="rc2_accept"><button class="accept-btn">Accept</button></label> <input type="radio" id="rc2_reject" name="rc2_action"><label for="rc2_reject"><button class="reject-btn">Reject</button></label> </td> </tr>
+                      <tr> <td class="col-green">209</td> <td>205</td> <td class="col-green">I don't like my roommate because we do not have the same vibes.</td> <td> <input type="radio" id="rc3_accept" name="rc3_action"><label for="rc3_accept"><button class="accept-btn">Accept</button></label> <input type="radio" id="rc3_reject" name="rc3_action"><label for="rc3_reject"><button class="reject-btn">Reject</button></label> </td> </tr>
+                 </tbody>
+             </table>
+        </div>
+
+        <!-- Reports and Notifications Section -->
+        <div id="reports-notifications" class="page-section">
+             <h2>Reports and Notifications</h2>
+             <table>
+                 <tbody>
+                     <tr>
+                         <td class="report-notification-section">
+                             <a class="drop-trigger" onclick="toggleDropdownContent(this)">Generate Report</a>
+                             <div class="dropdwn-content" style="display:none;">
+                                 <form class="report-form" onsubmit="submitReport(event)">
+                                     <textarea id="reportText" rows="6" placeholder="Enter your report details here..."></textarea>
+                                     <div style="text-align: right;"> <button type="submit">Submit Report</button> </div>
+                                     <div id="reportFeedback" class="report-feedback" style="display: none;">Your report has been submitted!</div>
+                                     <h4>Last Submitted Report:</h4>
+                                     <div id="submittedReportDisplay" class="report-content-display"> The students are very compliant, performing their assigned duties properly. There were some reports coming from the students concerning their room's environment, which were resolved immediately. However, some concerns were invalid as it was unnecessary, and were not addressed. </div>
+                                 </form>
+                             </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td class="report-notification-section">
+                             <a class="drop-trigger" onclick="toggleDropdownContent(this)">Notify Tenants</a>
+                             <div class="dropdwn-content" style="display:none;">
+                                 <form class="notify-form" onsubmit="sendNotification(event)">
+                                     <div class="search-container"> <input class="search-input indented" type="text" placeholder="Search for name/ID no."> </div>
+                                     <div class="form-row"> <label for="notifyTo">Send To:</label> <textarea id="notifyTo" rows="1" placeholder='Type name, ID, or "@tenants" for all'></textarea> </div>
+                                     <div class="form-row"> <label for="notifySubject">Subject:</label> <textarea id="notifySubject" rows="1" placeholder="Notification Subject"></textarea> </div>
+                                     <div class="message-area"> <label for="notifyMessage">Message:</label> <textarea id="notifyMessage" rows="5" placeholder="Type your message here..."></textarea> </div>
+                                     <div class="button-container"> <button type="submit">Send Notification</button> </div>
+                                      <div id="notifyFeedback" class="report-feedback" style="display: none; margin-top: 10px;">Notification Sent!</div>
+                                 </form>
+                             </div>
+                         </td>
+                     </tr>
+                 </tbody>
+             </table>
+        </div>
+
+        <!-- Maintenance Request Section -->
+        <div id="maintenance-request" class="page-section">
+             <h2>Maintenance Request</h2>
+              <table class="task-table">
+                 <thead>
+                     <tr> <th class="col-green">Room Problem</th> <th class="col-grey">Room No.</th> <th class="col-lightgreen">Status</th> <th>Action</th> </tr>
+                 </thead>
+                 <tbody>
+                     <tr> <td class="col-green">Broken pipes</td> <td class="col-grey">205</td> <td class="status">Completed</td> <td><button class="edit-btn">View/Edit</button></td> </tr>
+                     <tr> <td class="col-green">Broken windows</td> <td class="col-grey">109</td> <td class="status">Pending</td> <td> <button class="accept-btn">Mark Done</button> <button class="edit-btn">View/Edit</button> </td> </tr>
+                     <tr> <td class="col-green">Broken door hinge</td> <td class="col-grey">101</td> <td class="status">Pending</td> <td> <button class="accept-btn">Mark Done</button> <button class="edit-btn">View/Edit</button> </td> </tr>
+                 </tbody>
+             </table>
+        </div>
+
+         <!-- Notification Info Section (Placeholder/Example) -->
+        <div id="notification-info" class="page-section">
+            <h2>Notifications Details</h2>
+            <p>This section would show detailed notifications.</p>
+            <img src="Notification_Info.png" alt="Notification Details" class="info-image"> <!-- Ensure Notification_Info.png exists -->
+        </div>
+
+        <!-- Profile Info Section (Placeholder/Example) -->
+        <div id="profile-info" class="page-section">
+            <h2>Admin Profile</h2>
+            <p>This section shows the logged-in admin's profile information.</p>
+             <img src="Profile_Info.png" alt="Admin Profile" class="info-image"> <!-- Ensure Profile_Info.png exists -->
+        </div>
+
+        <!-- Settings Section (NEW DETAILED VERSION) -->
+        <div id="settings" class="page-section">
+            <h2>Settings</h2>
+
+            <!-- Account Security Category -->
+            <div class="setting-category">
+                <h3>Account Security</h3>
+                <form id="changePasswordForm" class="settings-form" onsubmit="changePassword(event)">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password:</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password:</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password:</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="setting-save-btn">Change Password</button>
+                    <span id="passwordFeedback" class="setting-feedback"></span>
+                </form>
+            </div>
+
+            <!-- Appearance Category -->
+            <div class="setting-category">
+                <h3>Appearance</h3>
+                <div class="form-group toggle-group">
+                    <label for="themeToggle">Dark Mode:</label>
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                 <span id="themeFeedback" class="setting-feedback"></span>
+            </div>
+
+            <!-- Notification Preferences Category -->
+            <div class="setting-category">
+                <h3>Notification Preferences</h3>
+                 <form id="notificationPrefsForm" class="settings-form" onsubmit="saveNotificationPrefs(event)">
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="notifyNewApplicant" name="notifications" value="newApplicant">
+                        <label for="notifyNewApplicant">Notify on New Applicant Submission</label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="notifyMaintenanceReq" name="notifications" value="maintenanceReq">
+                        <label for="notifyMaintenanceReq">Notify on New Maintenance Request</label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="notifyRoomChangeReq" name="notifications" value="roomChangeReq">
+                        <label for="notifyRoomChangeReq">Notify on Room Change Request</label>
+                    </div>
+                    <button type="submit" class="setting-save-btn">Save Notification Preferences</button>
+                     <span id="notificationFeedback" class="setting-feedback"></span>
+                </form>
+            </div>
+
+             <!-- System Settings Category -->
+            <div class="setting-category">
+                <h3>System</h3>
+                 <form id="systemSettingsForm" class="settings-form" onsubmit="saveSystemSettings(event)">
+                    <div class="form-group">
+                        <label for="sessionTimeout">Session Timeout:</label>
+                        <select id="sessionTimeout" name="sessionTimeout">
+                            <option value="15">15 Minutes</option>
+                            <option value="30" selected>30 Minutes</option>
+                            <option value="60">1 Hour</option>
+                            <option value="120">2 Hours</option>
+                            <option value="never">Never</option>
+                        </select>
+                    </div>
+                     <button type="submit" class="setting-save-btn">Save System Settings</button>
+                     <span id="systemFeedback" class="setting-feedback"></span>
+                </form>
+            </div>
+
+        </div>
+        <!-- End Settings Section -->
+
+
+        <!-- =================================== -->
+        <!-- == END PAGE SECTIONS == -->
+        <!-- =================================== -->
+    </main>
+
+    <script>
+        // --- JavaScript for Section Navigation ---
+
+        const sections = document.querySelectorAll('.page-section');
+        const navLinks = document.querySelectorAll('.sidebar a[onclick^="showSection"], .sidebar .dropdown-content a');
+        const topNavLinks = document.querySelectorAll('header a[onclick^="showSection"]');
+
+        function showSection(sectionId) {
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show the target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                 targetSection.classList.add('active');
+            } else {
+                console.warn(`Section with id "${sectionId}" not found.`);
+                 document.getElementById('home')?.classList.add('active'); // Fallback to home
+            }
+
+            // Update active state for sidebar links
+             let foundActive = false;
+             navLinks.forEach(link => {
+                 const linkSectionId = link.getAttribute('onclick')?.match(/showSection\('([^']+)'\)/)?.[1];
+                 if (linkSectionId === sectionId) {
+                     link.classList.add('active');
+                     // Activate parent dropdown trigger if applicable
+                     let parentWrapper = link.closest('.dropdown-trigger-wrapper');
+                     if (parentWrapper) {
+                          parentWrapper.classList.add('active');
+                     } else {
+                         // Direct link (not in dropdown)
+                          const directLinkWrapper = link.closest('a'); // The link itself
+                          if (directLinkWrapper && !directLinkWrapper.closest('.dropdown')) {
+                               directLinkWrapper.classList.add('active');
+                          }
+                     }
+                     foundActive = true; // Mark that the primary link was found
+                 } else {
+                     link.classList.remove('active');
+                     // Deactivate parent dropdown trigger if no child is active
+                     let parentWrapper = link.closest('.dropdown-trigger-wrapper');
+                     if(parentWrapper) {
+                         let hasActiveChild = parentWrapper.querySelector('.dropdown-content a.active');
+                         if (!hasActiveChild) {
+                             parentWrapper.classList.remove('active');
+                         }
+                     } else {
+                         // Deactivate direct link
+                          const directLinkWrapper = link.closest('a'); // The link itself
+                          if (directLinkWrapper && !directLinkWrapper.closest('.dropdown')) {
+                              directLinkWrapper.classList.remove('active');
+                          }
+                     }
+                 }
+            });
+
+             // Handle direct sidebar links (like Home) if not handled by dropdown logic
+             if (!foundActive) {
+                  const directLink = document.getElementById(`nav-${sectionId}`);
+                  if (directLink && !directLink.closest('.dropdown')) {
+                      directLink.classList.add('active');
+                  }
+             }
+
+            // Don't change active state for Logout button
+            const logoutButton = document.getElementById('nav-logout');
+            if(logoutButton) logoutButton.classList.remove('active');
+
+
+            // Reset active state for top nav icons (optional)
+             topNavLinks.forEach(link => link.classList.remove('active'));
+             // Add active state to clicked top nav icon if needed
+
+             // Scroll to top of content area
+             document.querySelector('main.content').scrollTop = 0;
+             window.scrollTo(0, 0);
+        }
+
+
+        // Function to toggle content within the Reports/Notifications table
+        function toggleDropdownContent(triggerElement) {
+            const content = triggerElement.nextElementSibling;
+            if (content && content.classList.contains('dropdwn-content')) {
+                 const isHidden = content.style.display === 'none' || content.style.display === '';
+                 content.style.display = isHidden ? 'block' : 'none';
+            }
+        }
+
+        // --- Placeholder Functions for Forms ---
+        function submitReport(event) {
+            event.preventDefault(); // Prevent actual form submission
+            const reportText = document.getElementById('reportText').value;
+            console.log("Submitting report:", reportText);
+            // Simulate submission
+            document.getElementById('submittedReportDisplay').textContent = reportText || "(No report content submitted)";
+            document.getElementById('reportFeedback').style.display = 'block';
+            document.getElementById('reportText').value = ''; // Clear textarea
+            // Hide feedback after a few seconds
+            setTimeout(() => {
+                document.getElementById('reportFeedback').style.display = 'none';
+            }, 3000);
+        }
+
+         function sendNotification(event) {
+            event.preventDefault(); // Prevent actual form submission
+            const to = document.getElementById('notifyTo').value;
+            const subject = document.getElementById('notifySubject').value;
+            const message = document.getElementById('notifyMessage').value;
+            const feedbackEl = document.getElementById('notifyFeedback'); // Get feedback element
+            console.log("Sending notification:", { to, subject, message });
+             // Simulate sending
+             feedbackEl.style.display = 'block';
+             feedbackEl.textContent = 'Notification Sent!'; // Set text
+             feedbackEl.classList.remove('error'); // Ensure it's not red
+             // Clear form (optional)
+             // document.getElementById('notifyTo').value = '';
+             // document.getElementById('notifySubject').value = '';
+             // document.getElementById('notifyMessage').value = '';
+            // Hide feedback after a few seconds
+            setTimeout(() => {
+                feedbackEl.style.display = 'none';
+            }, 3000);
+        }
+
+
+        // --- Settings Section Functions ---
+
+        function changePassword(event) {
+            event.preventDefault(); // Prevent actual form submission
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const feedbackEl = document.getElementById('passwordFeedback');
+
+            feedbackEl.textContent = ''; // Clear previous feedback
+            feedbackEl.classList.remove('error');
+
+            // Basic Validation
+            if (!currentPass || !newPass || !confirmPass) {
+                feedbackEl.textContent = 'Please fill in all password fields.';
+                feedbackEl.classList.add('error');
+                return;
+            }
+            if (newPass !== confirmPass) {
+                feedbackEl.textContent = 'New passwords do not match.';
+                feedbackEl.classList.add('error');
+                return;
+            }
+            if (newPass.length < 6) { // Example minimum length
+                 feedbackEl.textContent = 'New password must be at least 6 characters long.';
+                feedbackEl.classList.add('error');
+                return;
+            }
+
+            // Simulate API Call/Backend Logic
+            console.log("Simulating password change for:", { current: currentPass, new: newPass });
+            // In a real app, you'd send this to the server for verification and update.
+
+            // Simulate success
+            feedbackEl.textContent = 'Password changed successfully!';
+            document.getElementById('changePasswordForm').reset(); // Clear form
+
+             // Hide feedback after 3 seconds
+            setTimeout(() => { feedbackEl.textContent = ''; }, 3000);
+        }
+
+        function toggleTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const feedbackEl = document.getElementById('themeFeedback');
+            feedbackEl.textContent = ''; // Clear previous feedback
+
+            if (themeToggle.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark'); // Store preference
+                feedbackEl.textContent = 'Dark mode enabled.';
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light'); // Store preference
+                 feedbackEl.textContent = 'Light mode enabled.';
+            }
+             // Hide feedback after 3 seconds
+            setTimeout(() => { feedbackEl.textContent = ''; }, 3000);
+        }
+
+        function saveNotificationPrefs(event) {
+             event.preventDefault();
+             const feedbackEl = document.getElementById('notificationFeedback');
+             const checkboxes = document.querySelectorAll('#notificationPrefsForm input[type="checkbox"]');
+             const selectedPrefs = [];
+             checkboxes.forEach(cb => {
+                 if (cb.checked) {
+                     selectedPrefs.push(cb.value);
+                 }
+             });
+
+             console.log("Simulating saving notification preferences:", selectedPrefs);
+             localStorage.setItem('notificationPrefs', JSON.stringify(selectedPrefs)); // Store preference
+
+             feedbackEl.textContent = 'Notification preferences saved!';
+             feedbackEl.classList.remove('error');
+
+              // Hide feedback after 3 seconds
+            setTimeout(() => { feedbackEl.textContent = ''; }, 3000);
+        }
+
+         function saveSystemSettings(event) {
+             event.preventDefault();
+             const feedbackEl = document.getElementById('systemFeedback');
+             const timeoutValue = document.getElementById('sessionTimeout').value;
+
+             console.log("Simulating saving system settings:", { timeout: timeoutValue });
+              localStorage.setItem('sessionTimeout', timeoutValue); // Store preference
+
+             feedbackEl.textContent = 'System settings saved!';
+             feedbackEl.classList.remove('error');
+
+              // Hide feedback after 3 seconds
+            setTimeout(() => { feedbackEl.textContent = ''; }, 3000);
+         }
+
+
+        // --- Function to Apply Saved Settings on Load ---
+        function applySavedSettings() {
+            // Apply Theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeToggle').checked = true;
+            } else {
+                 document.body.classList.remove('dark-mode');
+                 document.getElementById('themeToggle').checked = false;
+            }
+
+             // Apply Notification Preferences
+             const savedNotifs = localStorage.getItem('notificationPrefs');
+             if (savedNotifs) {
+                 try {
+                     const prefs = JSON.parse(savedNotifs);
+                     if (Array.isArray(prefs)) { // Check if it's an array
+                        document.querySelectorAll('#notificationPrefsForm input[type="checkbox"]').forEach(cb => {
+                            cb.checked = prefs.includes(cb.value);
+                        });
+                     } else {
+                         console.warn("Stored notificationPrefs is not an array:", prefs);
+                         localStorage.removeItem('notificationPrefs'); // Clear invalid data
+                     }
+                 } catch (e) {
+                      console.error("Error parsing notificationPrefs from localStorage:", e);
+                      localStorage.removeItem('notificationPrefs'); // Clear invalid data
+                 }
+             } else {
+                 // Default settings if nothing is saved (optional)
+                  document.querySelectorAll('#notificationPrefsForm input[type="checkbox"]').forEach(cb => cb.checked = false); // Uncheck all by default
+             }
+
+             // Apply Session Timeout
+            const savedTimeout = localStorage.getItem('sessionTimeout');
+             if (savedTimeout) {
+                 // Check if the saved value is a valid option
+                 const selectElement = document.getElementById('sessionTimeout');
+                 const isValidOption = Array.from(selectElement.options).some(option => option.value === savedTimeout);
+                 if (isValidOption) {
+                    selectElement.value = savedTimeout;
+                 } else {
+                    console.warn("Invalid sessionTimeout value found in localStorage:", savedTimeout);
+                    selectElement.value = '30'; // Reset to default
+                    localStorage.setItem('sessionTimeout', '30');
+                 }
+             } else {
+                 // Default setting if nothing is saved
+                 document.getElementById('sessionTimeout').value = '30'; // Default to 30 mins
+             }
+        }
+
+         // --- ADDED: Logout Function ---
+         function handleLogout() {
+             // Add confirmation if desired
+             if (confirm("Are you sure you want to logout?")) {
+                 console.log("Logging out...");
+                 // Redirect to the login page
+                 // IMPORTANT: Replace 'Try_Login.html' with the actual filename of your login page
+                 window.location.href = 'LOGIN.html';
+             }
+         }
+
+        // --- Initialize Page ---
+        document.addEventListener('DOMContentLoaded', () => {
+            applySavedSettings(); // Apply saved settings first
+            showSection('home'); // Then show the default section
+        });
+
+    </script>
+
+</body>
+</html>
